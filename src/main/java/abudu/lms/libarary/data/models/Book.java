@@ -7,14 +7,16 @@ public class Book {
     private String publisher;
     private int year;
     private String isbn;
+    private boolean available;  // Add this line
 
-    public Book(int id, String title, String author, String publisher, int year, String isbn) {
+    public Book(int id, String title, String author, String publisher, int year, String isbn, boolean available) {  // Add boolean available to constructor
         this.id = id;
         this.title = title;
         this.author = author;
         this.publisher = publisher;
         this.year = year;
         this.isbn = isbn;
+        this.available = available;  // Add this line
     }
 
     public int getId() {
@@ -62,5 +64,13 @@ public class Book {
 
     public void setIsbn(String isbn) {
         this.isbn = isbn;
+    }
+
+    public boolean isAvailable() {  // Add this method
+        return available;
+    }
+
+    public void setAvailable(boolean available) {  // Add this method
+        this.available = available;
     }
 }
