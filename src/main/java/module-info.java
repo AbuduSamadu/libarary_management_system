@@ -10,6 +10,8 @@ module abudu.lms.libarary {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
+    requires java.sql;
+    requires java.desktop;
 
     opens abudu.lms.libarary to javafx.fxml;
     exports abudu.lms.libarary;
