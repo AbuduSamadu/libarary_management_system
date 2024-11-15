@@ -1,36 +1,43 @@
 package abudu.lms.library.database;
 
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class DatabaseHandler {
+    private static final Logger LOGGER = Logger.getLogger(DatabaseHandler.class.getName());
     private static final String URL = "jdbc:postgresql://localhost:5432/library";
     private static final String USER = "postgres";
     private static final String PASSWORD = "Abudu?0248";
 
-    private static DatabaseHandler instance;
     private Connection connection;
 
     private DatabaseHandler() {
         try {
             connection = DriverManager.getConnection(URL, USER, PASSWORD);
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Failed to connect to the database", e);
+            throw new RuntimeException("Database connection error", e);
         }
     }
 
-    public static synchronized DatabaseHandler getInstance() {
-        if (instance == null) {
-            instance = new DatabaseHandler();
-        }
-        return instance;
+    private static class SingletonHelper {
+        private static final DatabaseHandler INSTANCE = new DatabaseHandler();
+    }
+
+    public static DatabaseHandler getInstance() {
+        return SingletonHelper.INSTANCE;
     }
 
     public Connection getConnection() {
+        try {
+            if (connection == null || connection.isClosed() || !connection.isValid(2)) {
+                connection = DriverManager.getConnection(URL, USER, PASSWORD);
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Failed to reconnect to the database", e);
+            throw new RuntimeException("Database reconnection error", e);
+        }
         return connection;
     }
 
@@ -52,5 +59,4 @@ public class DatabaseHandler {
             statement.setObject(i + 1, params[i]);
         }
     }
-
 }

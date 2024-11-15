@@ -1,7 +1,7 @@
 package abudu.lms.library.controller;
 
 import abudu.lms.library.database.UserDataHandler;
-import abudu.lms.library.data.models.User;
+import abudu.lms.library.models.User;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;

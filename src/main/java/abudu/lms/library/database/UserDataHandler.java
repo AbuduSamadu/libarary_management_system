@@ -1,13 +1,13 @@
 package abudu.lms.library.database;
 
-import abudu.lms.library.data.models.User;
-import org.mindrot.jbcrypt.BCrypt;
-
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import org.mindrot.jbcrypt.BCrypt;
+
+import abudu.lms.library.models.User;
 
 public class UserDataHandler {
     private final DatabaseHandler dbHandler;
@@ -22,7 +22,7 @@ public class UserDataHandler {
             return false; // Validation failed
         }
 
-        String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+        String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt(12));
         return addUser(name, email, hashedPassword);
     }
 
@@ -33,7 +33,7 @@ public class UserDataHandler {
     }
 
     // Get user by email
-    public abudu.lms.library.data.models.User getUserByEmail(String email) throws SQLException {
+    public abudu.lms.library.models.User getUserByEmail(String email) throws SQLException {
         String query = "SELECT * FROM users WHERE email = ?";
         try (Connection conn = dbHandler.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -42,9 +42,10 @@ public class UserDataHandler {
                 if (resultSet.next()) {
                     return new User(
                             resultSet.getInt("id"),
-                            resultSet.getString("name"),
+                            resultSet.getString("username"),
                             resultSet.getString("email"),
-                            resultSet.getString("password")
+                            resultSet.getString("password"),
+                            resultSet.getTimestamp("created_at").toLocalDateTime()
                     );
                 }
             }

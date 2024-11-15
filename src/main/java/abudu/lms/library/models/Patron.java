@@ -1,4 +1,4 @@
-package abudu.lms.library.data.models;
+package abudu.lms.library.models;
 
 import java.util.LinkedList;
 
