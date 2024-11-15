@@ -1,0 +1,18 @@
+.header {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+}
+
+.text-field, .password-field {
+    -fx-pref-width: 300px;
+}
+
+.button {
+    -fx-pref-width: 300px;
+    -fx-background-color: #007bff;
+    -fx-text-fill: white;
+}
+
+.hyperlink {
+    -fx-text-fill: #007bff;
+}
