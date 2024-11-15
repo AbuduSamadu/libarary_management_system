@@ -1,4 +1,4 @@
-package abudu.lms.libarary.data.callback;
+package abudu.lms.library.data.callback;
 
 public interface GenericCallback {
     Object taskCompleted(Object result);

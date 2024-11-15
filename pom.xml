@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>abudu.lms</groupId>
-  <artifactId>Libarary</artifactId>
+  <artifactId>Library</artifactId>
   <version>1.0-SNAPSHOT</version>
   <name>Libarary</name>
 
@@ -14,7 +14,12 @@
 <junit.version>5.10.2</junit.version>  </properties>
 
   <dependencies>
-    <dependency>
+      <dependency>
+          <groupId>org.postgresql</groupId>
+          <artifactId>postgresql</artifactId>
+          <version>42.6.0</version> <!-- Use the latest version -->
+      </dependency>
+      <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-controls</artifactId>
       <version>17.0.6</version>
@@ -102,7 +107,24 @@
       <artifactId>junit-jupiter-engine</artifactId>
       <version>${junit.version}</version>
       <scope>test</scope>
-    </dependency>  </dependencies>
+    </dependency>
+    <dependency>
+      <groupId>org.mindrot</groupId>
+      <artifactId>jbcrypt</artifactId>
+      <version>0.4</version>
+    </dependency>
+      <dependency>
+          <groupId>org.kordamp.ikonli</groupId>
+          <artifactId>ikonli-core</artifactId>
+          <version>12.3.1</version>
+      </dependency>
+      <dependency>
+          <groupId>org.kordamp.ikonli</groupId>
+          <artifactId>ikonli-fontawesome5-pack</artifactId>
+          <version>12.3.1</version>
+      </dependency>
+
+  </dependencies>
 
   <build>
     <plugins>
@@ -124,7 +146,7 @@
             <!-- Default configuration for running with: mvn clean javafx:run -->
             <id>default-cli</id>
             <configuration>
-              <mainClass>abudu.lms.libarary/abudu.lms.libarary.HelloApplication</mainClass>
+              <mainClass>abudu.lms.library.LibraryManagementSystem</mainClass>
               <launcher>app</launcher>
               <jlinkZipName>app</jlinkZipName>
               <jlinkImageName>app</jlinkImageName>

@@ -1,4 +1,4 @@
-package abudu.lms.libarary.data.models;
+package abudu.lms.library.data.models;
 
 public class Transaction {
     private int id;

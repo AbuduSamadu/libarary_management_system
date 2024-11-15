@@ -1,22 +1,19 @@
-package abudu.lms.libarary.data.models;
+package abudu.lms.library.data.models;
 
-import java.util.LinkedList;
-
-public class Patron {
+public class User {
     private int id;
     private String name;
     private String email;
     private String password;
-    private final LinkedList<Book> borrowedBooks;
 
-    public Patron(int id, String name, String email, String password, LinkedList<Book> borrowedBooks) {
+    public User(int id, String name, String email, String password) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
-        this.borrowedBooks = borrowedBooks;
     }
 
+    // Getters and setters
     public int getId() {
         return id;
     }
@@ -24,6 +21,7 @@ public class Patron {
     public void setId(int id) {
         this.id = id;
     }
+
     public String getName() {
         return name;
     }
@@ -47,8 +45,4 @@ public class Patron {
     public void setPassword(String password) {
         this.password = password;
     }
-    public LinkedList<Book> getBorrowedBooks() {
-        return borrowedBooks;
-    }
-
 }
