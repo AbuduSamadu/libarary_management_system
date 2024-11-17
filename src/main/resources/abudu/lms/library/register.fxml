@@ -2,12 +2,14 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.VBox?>
-
 <?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.DatePicker?>
+
 <VBox fx:controller="abudu.lms.library.controller.UserRegistrationController"
       xmlns:fx="http://javafx.com/fxml" alignment="CENTER" spacing="10">
     <padding>
@@ -15,9 +17,12 @@
     </padding>
 
     <Label text="Register" styleClass="header"/>
-    <TextField fx:id="nameField" promptText="Username" />
+    <TextField fx:id="firstNameField" promptText="First Name" />
+    <TextField fx:id="lastNameField" promptText="Last Name" />
+    <TextField fx:id="usernameField" promptText="Username" />
     <TextField fx:id="emailField" promptText="Email" />
     <PasswordField fx:id="passwordField" promptText="Password" />
+    <ComboBox fx:id="roleComboBox" promptText="Select Role" />
     <Button text="Register" onAction="#registerUser" />
     <Hyperlink text="Already registered? Login here" onAction="#showLogin"/>
 </VBox>

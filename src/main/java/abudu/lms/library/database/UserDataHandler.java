@@ -1,16 +1,17 @@
 package abudu.lms.library.database;
 
+import abudu.lms.library.models.Role;
 import abudu.lms.library.models.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import org.mindrot.jbcrypt.BCrypt;
-
+import java.time.LocalDateTime;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
+import org.mindrot.jbcrypt.BCrypt;
 
 public class UserDataHandler {
     private final DatabaseHandler dbHandler;
@@ -23,13 +24,16 @@ public class UserDataHandler {
     /**
      * Register a new user.
      *
-     * @param username the username
-     * @param email    the email
-     * @param password the raw password
-     * @return if registration is successful,  otherwise
+     * @param firstName the first name
+     * @param lastName  the last name
+     * @param username  the username
+     * @param email     the email
+     * @param password  the raw password
+     * @param roles     the roles
+     * @return a message indicating if registration is successful or not
      */
-    public String registerUser(String username, String email, String password) {
-        if (isInvalidInput(username, email, password)) {
+    public String registerUser(String firstName, String lastName, String username, String email, String password, Set<Role> roles) {
+        if (isInvalidInput(firstName, lastName, username, email, password)) {
             return "Invalid input";
         }
         if (isEmailExists(email)) {
@@ -37,11 +41,10 @@ public class UserDataHandler {
         }
 
         String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt(12));
-        boolean userCreated = addUser(username, email, hashedPassword);
+        boolean userCreated = addUser(firstName, lastName, username, email, hashedPassword, LocalDateTime.now(), roles);
 
         return userCreated ? "User registered successfully" : "Registration failed";
     }
-
 
     // Check if an email already exists
     private boolean isEmailExists(String email) {
@@ -60,18 +63,21 @@ public class UserDataHandler {
         return false;
     }
 
-
     /**
      * Add a new user to the database.
      *
+     * @param firstName      the first name
+     * @param lastName       the last name
      * @param username       the username
      * @param email          the email
      * @param hashedPassword the hashed password
+     * @param createdAt      the creation timestamp
+     * @param roles          the roles
      * @return true if the user is added successfully, false otherwise
      */
-    public boolean addUser(String username, String email, String hashedPassword) {
-        final String query = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
-        return executeUpdate(query, username, email, hashedPassword);
+    public boolean addUser(String firstName, String lastName, String username, String email, String hashedPassword, LocalDateTime createdAt, Set<Role> roles) {
+        final String query = "INSERT INTO users (first_name, last_name, username, email, password, created_at, role) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        return executeUpdate(query, firstName, lastName, username, email, hashedPassword, createdAt, roles.iterator().next().name());
     }
 
     /**
@@ -82,7 +88,7 @@ public class UserDataHandler {
      * @throws SQLException if a database error occurs
      */
     public User getUserByEmail(String email) throws SQLException {
-        final String query = "SELECT id, username, email, password, created_at FROM users WHERE email = ?";
+        final String query = "SELECT id, first_name, last_name, username, email, password, created_at, role FROM users WHERE email = ?";
         try (Connection conn = dbHandler.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
 
@@ -104,8 +110,8 @@ public class UserDataHandler {
      * @return true if the update is successful, false otherwise
      */
     public boolean updateUser(User user) {
-        final String query = "UPDATE users SET username = ?, email = ?, password = ? WHERE id = ?";
-        return executeUpdate(query, user.getName(), user.getEmail(), user.getPassword(), user.getId());
+        final String query = "UPDATE users SET first_name = ?, last_name = ?, username = ?, email = ?, password = ? WHERE id = ?";
+        return executeUpdate(query, user.getFirstName(), user.getLastName(), user.getName(), user.getEmail(), user.getPassword(), user.getId());
     }
 
     /**
@@ -154,35 +160,32 @@ public class UserDataHandler {
     private User mapResultSetToUser(ResultSet resultSet) throws SQLException {
         return new User(
                 resultSet.getInt("id"),
+                resultSet.getString("first_name"),
+                resultSet.getString("last_name"),
                 resultSet.getString("username"),
                 resultSet.getString("email"),
                 resultSet.getString("password"),
-                resultSet.getTimestamp("created_at").toLocalDateTime()
+                resultSet.getTimestamp("created_at").toLocalDateTime(),
+                Set.of(Role.valueOf(resultSet.getString("role")))
         );
     }
 
     /**
      * Validate input for user registration.
      *
-     * @param username the username
-     * @param email    the email
-     * @param password the password
+     * @param firstName the first name
+     * @param lastName  the last name
+     * @param username  the username
+     * @param email     the email
+     * @param password  the password
      * @return true if any input is invalid, false otherwise
      */
-    private boolean isInvalidInput(String username, String email, String password) {
-        return username == null || username.isEmpty() ||
+    private boolean isInvalidInput(String firstName, String lastName, String username, String email, String password) {
+        return firstName == null || firstName.isEmpty() ||
+                lastName == null || lastName.isEmpty() ||
+                username == null || username.isEmpty() ||
                 email == null || email.isEmpty() ||
                 password == null || password.isEmpty();
-    }
-
-    /**
-     * Hash a password using BCrypt.
-     *
-     * @param password the raw password
-     * @return the hashed password
-     */
-    private String hashPassword(String password) {
-        return BCrypt.hashpw(password, BCrypt.gensalt(12));
     }
 
     /**

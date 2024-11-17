@@ -1,73 +1,47 @@
 package abudu.lms.library.models;
 
-import java.util.LinkedList;
-import java.util.Queue;
+import java.time.LocalDateTime;
+import java.util.*;
 
-public class Librarian {
-    private int id;
-    private String name;
-    private String email;
-    private String password;
-    private LinkedList<Book> bookList;
-    private LinkedList<Patron> patronList;
-    private Queue<Transaction> transactionList;
+public class Librarian extends User {
+    private List<Book> bookList;          // For ordered, index-based access
+    private Map<Integer, Patron> patronMap; // For efficient lookup by ID
+    private Queue<Transaction> transactionList; // FIFO transaction management
 
-    public Librarian(int id, String name, String email, String password, LinkedList<Book> bookList, LinkedList<Patron> patronList, Queue<Transaction> transactionList) {    // Add this line
-        this.id = id;
-        this.name = name;
-        this.email = email;
-        this.password = password;
-        this.bookList = bookList;  // Add this line
-        this.patronList = patronList;  // Add this line
-        this.transactionList = transactionList;  // Add this line
-
+    public Librarian(
+            int id,
+            String firstname,
+            String lastname,
+            String username,
+            String email,
+            String password,
+            LocalDateTime createdAt,
+            Set<Role> roles,
+            List<Book> bookList,
+            Map<Integer, Patron> patronMap,
+            Queue<Transaction> transactionList
+    ) {
+        super(id, firstname, lastname, username, email, password, createdAt, roles);
+        this.bookList = bookList;
+        this.patronMap = patronMap;
+        this.transactionList = transactionList;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public LinkedList<Book> getBookList() {
+    // Getters and Setters
+    public List<Book> getBookList() {
         return bookList;
     }
 
-    public void setBookList(LinkedList<Book> bookList) {
+    public void setBookList(List<Book> bookList) {
         this.bookList = bookList;
     }
 
-    public LinkedList<Patron> getPatronList() {
-        return patronList;
+    public Map<Integer, Patron> getPatronMap() {
+        return patronMap;
     }
 
-    public void setPatronList(LinkedList<Patron> patronList) {
-        this.patronList = patronList;
+    public void setPatronMap(Map<Integer, Patron> patronMap) {
+        this.patronMap = patronMap;
     }
 
     public Queue<Transaction> getTransactionList() {
@@ -78,4 +52,5 @@ public class Librarian {
         this.transactionList = transactionList;
     }
 
+    // Additional methods for managing books, patrons, and transactions can be added here
 }

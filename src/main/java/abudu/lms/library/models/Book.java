@@ -1,7 +1,7 @@
 package abudu.lms.library.models;
 
 public class Book {
-    private String id;
+    private int id;
     private String title;
     private String author;
     private String publisher;
@@ -9,7 +9,7 @@ public class Book {
     private String isbn;
     private boolean available;  // Add this line
 
-    public Book(String id, String title, String author, String publisher, int year, String isbn, boolean available) {  // Add boolean available to constructor
+    public Book(int id, String title, String author, String publisher, int year, String isbn, boolean available) {  // Add boolean available to constructor
         this.id = id;
         this.title = title;
         this.author = author;
@@ -19,11 +19,11 @@ public class Book {
         this.available = available;  // Add this line
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
     public String getTitle() {
@@ -73,4 +73,6 @@ public class Book {
     public void setAvailable(boolean available) {  // Add this method
         this.available = available;
     }
+
+
 }

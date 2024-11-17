@@ -2,18 +2,16 @@ package abudu.lms.library.models;
 
 import java.time.LocalDateTime;
 
-public class Transaction {
+public class ReturnBook {
     private int id;
     private Patron patron;
     private Book book;
-    private LocalDateTime borrowDate;
     private LocalDateTime returnDate;
 
-    public Transaction(int id, Patron patron, Book book, LocalDateTime borrowDate, LocalDateTime returnDate) {
+    public ReturnBook(int id, Patron patron, Book book, LocalDateTime returnDate) {
         this.id = id;
         this.patron = patron;
         this.book = book;
-        this.borrowDate = borrowDate;
         this.returnDate = returnDate;
     }
 
@@ -40,14 +38,6 @@ public class Transaction {
 
     public void setBook(Book book) {
         this.book = book;
-    }
-
-    public LocalDateTime getBorrowDate() {
-        return borrowDate;
-    }
-
-    public void setBorrowDate(LocalDateTime borrowDate) {
-        this.borrowDate = borrowDate;
     }
 
     public LocalDateTime getReturnDate() {
