@@ -124,6 +124,23 @@
           <version>12.3.1</version>
       </dependency>
 
+          <dependency>
+              <groupId>org.openjfx</groupId>
+              <artifactId>javafx-controls</artifactId>
+              <version>17.0.6</version>
+          </dependency>
+          <dependency>
+              <groupId>org.openjfx</groupId>
+              <artifactId>javafx-fxml</artifactId>
+              <version>17.0.6</version>
+          </dependency>
+          <dependency>
+              <groupId>org.openjfx</groupId>
+              <artifactId>javafx-graphics</artifactId>
+              <version> 17.0.6</version>
+          </dependency>
+
+
   </dependencies>
 
   <build>
@@ -135,6 +152,7 @@
         <configuration>
           <source>23</source>
           <target>23</target>
+            <compilerArgs>--enable-preview</compilerArgs>
         </configuration>
       </plugin>
       <plugin>

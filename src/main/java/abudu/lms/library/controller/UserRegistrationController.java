@@ -1,24 +1,26 @@
 package abudu.lms.library.controller;
 
-import abudu.lms.library.database.UserDataHandler;
-import abudu.lms.library.models.Role;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ButtonType;
-import javafx.stage.Stage;
-import org.mindrot.jbcrypt.BCrypt;
-
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.mindrot.jbcrypt.BCrypt;
+
+import abudu.lms.library.database.UserDataHandler;
+import abudu.lms.library.models.ERole;
+import abudu.lms.library.models.Role;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 public class UserRegistrationController {
 
@@ -48,7 +50,9 @@ public class UserRegistrationController {
 
     @FXML
     public void initialize() {
-        roleComboBox.getItems().addAll(Role.values());
+        for (ERole eRole : ERole.values()) {
+            roleComboBox.getItems().add(new Role(0, eRole));
+        }
     }
 
     @FXML
@@ -66,7 +70,7 @@ public class UserRegistrationController {
         }
 
         // Encrypt the password before storing
-        String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+        String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt(12));
 
         // Create a set of roles and add the selected role
         Set<Role> roles = new HashSet<>();

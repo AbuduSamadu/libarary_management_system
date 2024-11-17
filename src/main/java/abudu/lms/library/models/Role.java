@@ -1,21 +1,35 @@
 package abudu.lms.library.models;
 
-public enum Role {
-    PATRON("Patron"),
-    LIBRARIAN("Librarian");
+public class Role {
+    private int id;
+    private ERole name;
 
-    private final String name;
 
-    Role(String name) {
+    /**
+     * Constructor for the Role class.
+     * @param id The id of the role.
+     * @param name The name of the role.
+     */
+    public Role(int id, ERole name) {
+        this.id = id;
         this.name = name;
     }
 
-    public String getName() {
+
+    // Getters and setters
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public ERole getName() {
         return name;
     }
 
-    @Override
-    public String toString() {
-        return name;
+    public void setName(ERole name) {
+        this.name = name;
     }
 }

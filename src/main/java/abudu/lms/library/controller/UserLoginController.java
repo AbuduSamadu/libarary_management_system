@@ -40,39 +40,52 @@ public class UserLoginController {
         String email = emailField.getText().trim();
         String password = passwordField.getText().trim();
 
-        if (email.isEmpty() || password.isEmpty()) {
-            showAlert(AlertType.WARNING, "Warning", "Email and password cannot be empty.");
+        if (!isValidEmail(email)) {
+            showAlert(AlertType.WARNING, "Warning", "Please enter a valid email address.");
+            return;
+        }
+
+        if (password.isEmpty()) {
+            showAlert(AlertType.WARNING, "Warning", "Password cannot be empty.");
             return;
         }
 
         Task<Void> loginTask = new Task<>() {
             @Override
             protected Void call() {
-                try {
-                    User user = userDataHandler.getUserByEmail(email);
-                    if (user != null && BCrypt.checkpw(password, user.getPassword())) {
-                        updateMessage("Login successful!");
-                        // Proceed to next functionality (e.g., load dashboard scene)
-                    } else {
-                        updateMessage("Invalid credentials.");
-                    }
-                } catch (SQLException e) {
-                    Logger.getLogger(UserLoginController.class.getName()).log(Level.SEVERE, "Database error during login", e);
-                    updateMessage("An error occurred while trying to log in.");
+                User user = userDataHandler.getUserByEmail(email);
+                if (user != null && BCrypt.checkpw(password, user.getPassword())) {
+                    updateMessage("Login successful!");
+                    loadDashboard();
+                } else {
+                    updateMessage("Invalid email or password.");
                 }
                 return null;
             }
         };
 
         loginTask.messageProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue.equals("Login successful!")) {
-                showAlert(AlertType.INFORMATION, "Success", newValue);
-            } else {
-                showAlert(AlertType.ERROR, "Error", newValue);
+            if (!newValue.isEmpty()) {
+                showAlert(newValue.equals("Login successful!") ? AlertType.INFORMATION : AlertType.ERROR,
+                        "Login Status", newValue);
             }
         });
 
         new Thread(loginTask).start();
+    }
+
+    private boolean isValidEmail(String email) {
+        return email.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$");
+    }
+
+    private void loadDashboard() {
+        try {
+            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/abudu/lms/library/dashboard.fxml")));
+            Stage stage = (Stage) emailField.getScene().getWindow();
+            stage.setScene(new Scene(root));
+        } catch (IOException e) {
+            Logger.getLogger(UserLoginController.class.getName()).log(Level.SEVERE, "Error loading dashboard", e);
+        }
     }
 
     private void showAlert(AlertType alertType, String title, String content) {

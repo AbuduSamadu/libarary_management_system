@@ -1,24 +1,23 @@
 package abudu.lms.library.database;
 
+import abudu.lms.library.models.ERole;
 import abudu.lms.library.models.Role;
 import abudu.lms.library.models.User;
+import org.mindrot.jbcrypt.BCrypt;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.mindrot.jbcrypt.BCrypt;
 
 public class UserDataHandler {
+
     private final DatabaseHandler dbHandler;
 
     // Constructor
     public UserDataHandler() {
-        dbHandler = DatabaseHandler.getInstance();
+        this.dbHandler = DatabaseHandler.getInstance();
     }
 
     /**
@@ -33,32 +32,46 @@ public class UserDataHandler {
      * @return a message indicating if registration is successful or not
      */
     public String registerUser(String firstName, String lastName, String username, String email, String password, Set<Role> roles) {
+        // Validate inputs
         if (isInvalidInput(firstName, lastName, username, email, password)) {
-            return "Invalid input";
-        }
-        if (isEmailExists(email)) {
-            return "Email already exists"; // Email check
+            return "Invalid input: all fields are required.";
         }
 
+        if (!isValidEmail(email)) {
+            return "Invalid email format.";
+        }
+
+        // Check if email already exists
+        if (isEmailExists(email)) {
+            return "Email already exists.";
+        }
+
+        // Hash the password
         String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt(12));
+
+        // Add user to the database
         boolean userCreated = addUser(firstName, lastName, username, email, hashedPassword, LocalDateTime.now(), roles);
 
-        return userCreated ? "User registered successfully" : "Registration failed";
+        return userCreated ? "User registered successfully" : "Registration failed.";
     }
 
-    // Check if an email already exists
+    /**
+     * Check if an email already exists in the database.
+     *
+     * @param email the email
+     * @return true if the email exists, false otherwise
+     */
     private boolean isEmailExists(String email) {
-        String query = "SELECT COUNT(*) FROM users WHERE email = ?";
+        final String query = "SELECT 1 FROM users WHERE email = ? LIMIT 1";
         try (Connection conn = dbHandler.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
+
             stmt.setString(1, email);
             try (ResultSet resultSet = stmt.executeQuery()) {
-                if (resultSet.next()) {
-                    return resultSet.getInt(1) > 0; // Check if count > 0
-                }
+                return resultSet.next();
             }
         } catch (SQLException e) {
-            Logger.getLogger(UserDataHandler.class.getName()).log(Level.SEVERE, "An error occurred while checking if email exists", e);
+            logSQLException("Error checking if email exists", e);
         }
         return false;
     }
@@ -77,17 +90,16 @@ public class UserDataHandler {
      */
     public boolean addUser(String firstName, String lastName, String username, String email, String hashedPassword, LocalDateTime createdAt, Set<Role> roles) {
         final String query = "INSERT INTO users (first_name, last_name, username, email, password, created_at, role) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        return executeUpdate(query, firstName, lastName, username, email, hashedPassword, createdAt, roles.iterator().next().name());
+        return executeUpdate(query, firstName, lastName, username, email, hashedPassword, createdAt, roles.iterator().next().getName());
     }
 
     /**
      * Retrieve a user by their email.
      *
-     * @param email the email
+     * @param email the email to search for
      * @return a User object if found, null otherwise
-     * @throws SQLException if a database error occurs
      */
-    public User getUserByEmail(String email) throws SQLException {
+    public User getUserByEmail(String email) {
         final String query = "SELECT id, first_name, last_name, username, email, password, created_at, role FROM users WHERE email = ?";
         try (Connection conn = dbHandler.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -99,35 +111,64 @@ public class UserDataHandler {
                     return mapResultSetToUser(resultSet);
                 }
             }
+        } catch (SQLException e) {
+            Logger.getLogger(UserDataHandler.class.getName())
+                    .log(Level.SEVERE, "Error retrieving user by email: " + email, e);
         }
         return null;
     }
 
     /**
-     * Update user details in the database.
+     * Map a ResultSet to a User object.
      *
-     * @param user the User object with updated data
-     * @return true if the update is successful, false otherwise
+     * @param resultSet the ResultSet containing user data
+     * @return a User object with populated fields
+     * @throws SQLException if a database error occurs
      */
-    public boolean updateUser(User user) {
-        final String query = "UPDATE users SET first_name = ?, last_name = ?, username = ?, email = ?, password = ? WHERE id = ?";
-        return executeUpdate(query, user.getFirstName(), user.getLastName(), user.getName(), user.getEmail(), user.getPassword(), user.getId());
+    private User mapResultSetToUser(ResultSet resultSet) throws SQLException {
+        try {
+            int id = resultSet.getInt("id");
+            String firstName = resultSet.getString("first_name");
+            String lastName = resultSet.getString("last_name");
+            String username = resultSet.getString("username");
+            String email = resultSet.getString("email");
+            String password = resultSet.getString("password");
+            LocalDateTime createdAt = resultSet.getTimestamp("created_at").toLocalDateTime();
+            Set<Role> roles = Set.of(new Role(1, ERole.valueOf(resultSet.getString("role"))));
+
+            return new User(id, firstName, lastName, username, email, password, createdAt, roles);
+        } catch (IllegalArgumentException e) {
+            throw new SQLException("Invalid role in the database for user: " + resultSet.getString("email"), e);
+        }
     }
 
     /**
-     * Delete a user from the database by their ID.
+     * Validate user input for registration.
      *
-     * @param id the user ID
-     * @return true if the user is deleted, false otherwise
+     * @param firstName the first name
+     * @param lastName  the last name
+     * @param username  the username
+     * @param email     the email
+     * @param password  the password
+     * @return true if any input is invalid, false otherwise
      */
-    public boolean deleteUser(int id) {
-        final String query = "DELETE FROM users WHERE id = ?";
-        return executeUpdate(query, id);
+    private boolean isInvalidInput(String firstName, String lastName, String username, String email, String password) {
+        return firstName == null || firstName.isEmpty() ||
+                lastName == null || lastName.isEmpty() ||
+                username == null || username.isEmpty() ||
+                email == null || email.isEmpty() ||
+                password == null || password.isEmpty();
     }
 
-    // ====================
-    // Helper Methods
-    // ====================
+    /**
+     * Validate email format.
+     *
+     * @param email the email
+     * @return true if the email format is valid, false otherwise
+     */
+    private boolean isValidEmail(String email) {
+        return email != null && email.matches("^[\\w.%+-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$");
+    }
 
     /**
      * Execute an update query (INSERT, UPDATE, DELETE) with parameters.
@@ -145,47 +186,20 @@ public class UserDataHandler {
             return true;
 
         } catch (SQLException e) {
-            Logger.getLogger(UserDataHandler.class.getName()).log(Level.SEVERE, "An error occurred while executing an update query", e);
+            logSQLException("Error executing update query", e);
             return false;
         }
     }
 
     /**
-     * Map a ResultSet to a User object.
+     * Log SQLException with a specific context.
      *
-     * @param resultSet the ResultSet
-     * @return a User object
-     * @throws SQLException if a database error occurs
+     * @param context the context of the exception
+     * @param e       the SQLException
      */
-    private User mapResultSetToUser(ResultSet resultSet) throws SQLException {
-        return new User(
-                resultSet.getInt("id"),
-                resultSet.getString("first_name"),
-                resultSet.getString("last_name"),
-                resultSet.getString("username"),
-                resultSet.getString("email"),
-                resultSet.getString("password"),
-                resultSet.getTimestamp("created_at").toLocalDateTime(),
-                Set.of(Role.valueOf(resultSet.getString("role")))
-        );
-    }
-
-    /**
-     * Validate input for user registration.
-     *
-     * @param firstName the first name
-     * @param lastName  the last name
-     * @param username  the username
-     * @param email     the email
-     * @param password  the password
-     * @return true if any input is invalid, false otherwise
-     */
-    private boolean isInvalidInput(String firstName, String lastName, String username, String email, String password) {
-        return firstName == null || firstName.isEmpty() ||
-                lastName == null || lastName.isEmpty() ||
-                username == null || username.isEmpty() ||
-                email == null || email.isEmpty() ||
-                password == null || password.isEmpty();
+    private void logSQLException(String context, SQLException e) {
+        Logger.getLogger(UserDataHandler.class.getName())
+                .log(Level.SEVERE, context + ": " + e.getMessage(), e);
     }
 
     /**
