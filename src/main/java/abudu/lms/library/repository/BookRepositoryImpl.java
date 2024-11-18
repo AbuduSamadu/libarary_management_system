@@ -33,6 +33,9 @@ public class BookRepositoryImpl implements BookRepository {
             statement.setString(1, book.getTitle());
             statement.setString(2, book.getAuthor());
             statement.setString(3, book.getIsbn());
+            statement.setString(4, book.getPublisher());
+            statement.setInt(5, book.getYear());
+            statement.setBoolean(6, book.isAvailable());
 
             return statement.executeUpdate() > 0;
         } catch (SQLException e) {
