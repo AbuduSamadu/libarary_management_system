@@ -2,6 +2,7 @@ package abudu.lms.library.controller;
 
 import abudu.lms.library.database.UserDataHandler;
 import abudu.lms.library.models.User;
+import abudu.lms.library.views.landingPage.Dashboard;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -55,10 +56,6 @@ public class UserLoginController {
             protected Void call() {
                 User user = userDataHandler.getUserByEmail(email);
                 if (user != null && BCrypt.checkpw(password, user.getPassword())) {
-                    System.out.println("Password entered: " + password);
-                    System.out.println("Stored password hash: " + user.getPassword());
-                    System.out.println("BCrypt match result: " + BCrypt.checkpw(password, user.getPassword()));
-
                     updateMessage("Login successful!");
                     loadDashboard();
                 } else {
@@ -83,13 +80,9 @@ public class UserLoginController {
     }
 
     private void loadDashboard() {
-        try {
-            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/abudu/lms/library/dashboard.fxml")));
-            Stage stage = (Stage) emailField.getScene().getWindow();
-            stage.setScene(new Scene(root));
-        } catch (IOException e) {
-            Logger.getLogger(UserLoginController.class.getName()).log(Level.SEVERE, "Error loading dashboard", e);
-        }
+        Dashboard dashboard = new Dashboard();
+        Stage stage = (Stage) emailField.getScene().getWindow();
+        dashboard.start(stage);
     }
 
     private void showAlert(AlertType alertType, String title, String content) {
@@ -103,9 +96,10 @@ public class UserLoginController {
         try {
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/abudu/lms/library/register.fxml")));
             Stage stage = (Stage) emailField.getScene().getWindow();
-            stage.setScene(new Scene(root));
+            stage.setScene(new Scene(root, 800, 600));
         } catch (IOException e) {
             Logger.getLogger(UserLoginController.class.getName()).log(Level.SEVERE, "An error occurred while trying to load the registration screen", e);
         }
     }
+
 }

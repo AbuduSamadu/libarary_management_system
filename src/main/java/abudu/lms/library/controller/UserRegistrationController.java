@@ -1,6 +1,7 @@
 package abudu.lms.library.controller;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
@@ -50,6 +51,7 @@ public class UserRegistrationController {
 
     @FXML
     public void initialize() {
+        // Populate roleComboBox with available roles
         for (ERole eRole : ERole.values()) {
             roleComboBox.getItems().add(new Role(0, eRole));
         }
@@ -64,55 +66,60 @@ public class UserRegistrationController {
         String password = passwordField.getText();
         Role selectedRole = roleComboBox.getValue();
 
-        if (firstName.isEmpty() || lastName.isEmpty() || username.isEmpty() || email.isEmpty() || password.isEmpty()) {
-            showAlert(AlertType.ERROR, "Error", "All fields are required.");
-            return;
-        }
-
-        if (!email.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
-            showAlert(AlertType.ERROR, "Invalid Email", "Please enter a valid email address.");
-            return;
-        }
-
-        if (password.length() < 8) {
-            showAlert(AlertType.ERROR, "Weak Password", "Password must be at least 8 characters long.");
-            return;
-        }
-
         if (selectedRole == null) {
-            showAlert(AlertType.ERROR, "Role Missing", "Please select a role.");
+            showAlert(Alert.AlertType.WARNING, "Validation Error", "Please select a role.");
             return;
         }
-
-        String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt(12));
 
         Set<Role> roles = new HashSet<>();
         roles.add(selectedRole);
 
-        try {
-            String result = userDataHandler.registerUser(firstName, lastName, username, email, hashedPassword, roles);
-            if (result.equals("User registered successfully")) {
-                showAlert(AlertType.INFORMATION, "Success", result);
-                clearFields();
-            } else {
-                showAlert(AlertType.ERROR, "Registration Failed", result);
-            }
-        } catch (Exception e) {
-            Logger.getLogger(UserRegistrationController.class.getName())
-                    .log(Level.SEVERE, "An error occurred during user registration", e);
-            showAlert(AlertType.ERROR, "Error", "An unexpected error occurred. Please try again.");
+        // Register the user and handle feedback
+        String registrationResult = registerUser(firstName, lastName, username, email, password, roles);
+        if (registrationResult.equals("User registered successfully.")) {
+            showAlert(Alert.AlertType.INFORMATION, "Success", registrationResult);
+            clearFields();
+        } else {
+            showAlert(Alert.AlertType.ERROR, "Registration Failed", registrationResult);
         }
     }
 
+    private String registerUser(String firstName, String lastName, String username, String email, String password, Set<Role> roles) {
+        // Validate input
+        if (!validateInput(firstName, lastName, username, email, password)) {
+            return "Invalid input: Ensure all fields are filled correctly.";
+        }
+
+        // Check email existence
+        if (userDataHandler.getUserByEmail(email) != null) {
+            return "Email already exists.";
+        }
+
+        // Hash password
+        String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt(12));
+
+        // Add user
+        boolean isSuccess = userDataHandler.addUser(firstName, lastName, username, email, hashedPassword, LocalDateTime.now(), roles);
+        return isSuccess ? "User registered successfully." : "Registration failed.";
+    }
+
+    private boolean validateInput(String firstName, String lastName, String username, String email, String password) {
+        if (firstName == null || firstName.trim().isEmpty()) return false;
+        if (lastName == null || lastName.trim().isEmpty()) return false;
+        if (username == null || username.trim().isEmpty()) return false;
+        if (email == null || !email.matches("^[\\w.%+-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$")) return false;
+        return password != null && !password.trim().isEmpty();
+    }
 
     @FXML
     public void showLogin() {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/abudu/lms/library/login.fxml"));
             Stage stage = (Stage) firstNameField.getScene().getWindow();
-            stage.setScene(new Scene(root, 320, 240));
+            stage.setScene(new Scene(root, 600, 400));
         } catch (IOException e) {
             Logger.getLogger(UserRegistrationController.class.getName()).log(Level.SEVERE, "An error occurred while trying to load the login screen", e);
+            showAlert(Alert.AlertType.ERROR, "Error", "Unable to load login screen.");
         }
     }
 
@@ -125,7 +132,7 @@ public class UserRegistrationController {
         roleComboBox.setValue(null);
     }
 
-    private void showAlert(AlertType alertType, String title, String content) {
+    private void showAlert(Alert.AlertType alertType, String title, String content) {
         Alert alert = new Alert(alertType, content, ButtonType.OK);
         alert.setTitle(title);
         alert.showAndWait();

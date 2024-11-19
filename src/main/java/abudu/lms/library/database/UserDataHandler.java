@@ -20,48 +20,6 @@ public class UserDataHandler {
         this.dbHandler = DatabaseHandler.getInstance();
     }
 
-    /**
-     * Register a new user.
-     *
-     * @param firstName the first name
-     * @param lastName  the last name
-     * @param username  the username
-     * @param email     the email
-     * @param password  the raw password
-     * @param roles     the roles
-     * @return a message indicating if registration is successful or not
-     */
-    public String registerUser(String firstName, String lastName, String username, String email, String password, Set<Role> roles) {
-        // Validate input
-        if (!validateInput(firstName, lastName, username, email, password)) {
-            return "Invalid input: Ensure all fields are filled correctly.";
-        }
-
-        // Check email existence
-        User existingUser = getUserByEmail(email);
-        if (existingUser != null) {
-            return "Email already exists.";
-        }
-
-        // Hash password
-        String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt(12));
-
-        // Add user
-        if (addUser(firstName, lastName, username, email, hashedPassword, LocalDateTime.now(), roles)) {
-            return "User registered successfully.";
-        }
-
-        return "Registration failed.";
-    }
-
-    private boolean validateInput(String firstName, String lastName, String username, String email, String password) {
-        return firstName != null && !firstName.isEmpty() &&
-                lastName != null && !lastName.isEmpty() &&
-                username != null && !username.isEmpty() &&
-                email != null && email.matches("^[\\w.%+-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$") &&
-                password != null && !password.isEmpty();
-    }
-
 
     /**
      * Add a new user to the database.

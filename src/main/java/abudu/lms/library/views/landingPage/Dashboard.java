@@ -66,7 +66,7 @@ public class Dashboard extends Application {
         sidebar.setStyle("-fx-background-color: #2c3e50;");
 
         // Add a logo at the top
-        ImageView logo = new ImageView(new Image("file:src/main/resources/logo.png"));
+        ImageView logo = new ImageView(new Image("file:src/main/resources/abudu/lms/library/logo.svg"));
         logo.setFitWidth(100);
         logo.setPreserveRatio(true);
         sidebar.getChildren().add(logo);
@@ -126,7 +126,7 @@ public class Dashboard extends Application {
 
     private void loadLoginPage(Stage stage) {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/abudu/lms/library/login.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/abudu/lms/library/register.fxml"));
             Scene scene = new Scene(fxmlLoader.load(), 620, 540);
             scene.getStylesheets().add(getClass().getResource("/abudu/lms/library/dark-theme.css").toExternalForm());
             stage.setScene(scene);
