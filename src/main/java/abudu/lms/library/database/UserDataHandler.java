@@ -32,49 +32,36 @@ public class UserDataHandler {
      * @return a message indicating if registration is successful or not
      */
     public String registerUser(String firstName, String lastName, String username, String email, String password, Set<Role> roles) {
-        // Validate inputs
-        if (isInvalidInput(firstName, lastName, username, email, password)) {
-            return "Invalid input: all fields are required.";
+        // Validate input
+        if (!validateInput(firstName, lastName, username, email, password)) {
+            return "Invalid input: Ensure all fields are filled correctly.";
         }
 
-        if (!isValidEmail(email)) {
-            return "Invalid email format.";
-        }
-
-        // Check if email already exists
-        if (isEmailExists(email)) {
+        // Check email existence
+        User existingUser = getUserByEmail(email);
+        if (existingUser != null) {
             return "Email already exists.";
         }
 
-        // Hash the password
+        // Hash password
         String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt(12));
 
-        // Add user to the database
-        boolean userCreated = addUser(firstName, lastName, username, email, hashedPassword, LocalDateTime.now(), roles);
-
-        return userCreated ? "User registered successfully" : "Registration failed.";
-    }
-
-    /**
-     * Check if an email already exists in the database.
-     *
-     * @param email the email
-     * @return true if the email exists, false otherwise
-     */
-    private boolean isEmailExists(String email) {
-        final String query = "SELECT 1 FROM users WHERE email = ? LIMIT 1";
-        try (Connection conn = dbHandler.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
-
-            stmt.setString(1, email);
-            try (ResultSet resultSet = stmt.executeQuery()) {
-                return resultSet.next();
-            }
-        } catch (SQLException e) {
-            logSQLException("Error checking if email exists", e);
+        // Add user
+        if (addUser(firstName, lastName, username, email, hashedPassword, LocalDateTime.now(), roles)) {
+            return "User registered successfully.";
         }
-        return false;
+
+        return "Registration failed.";
     }
+
+    private boolean validateInput(String firstName, String lastName, String username, String email, String password) {
+        return firstName != null && !firstName.isEmpty() &&
+                lastName != null && !lastName.isEmpty() &&
+                username != null && !username.isEmpty() &&
+                email != null && email.matches("^[\\w.%+-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$") &&
+                password != null && !password.isEmpty();
+    }
+
 
     /**
      * Add a new user to the database.
@@ -134,7 +121,10 @@ public class UserDataHandler {
             String email = resultSet.getString("email");
             String password = resultSet.getString("password");
             LocalDateTime createdAt = resultSet.getTimestamp("created_at").toLocalDateTime();
-            Set<Role> roles = Set.of(new Role(1, ERole.valueOf(resultSet.getString("role"))));
+            String roleName = resultSet.getString("role");
+            ERole role = ERole.valueOf(roleName); // Map string to ERole enum
+
+            Set<Role> roles = Set.of(new Role(role.ordinal(), role));
 
             return new User(id, firstName, lastName, username, email, password, createdAt, roles);
         } catch (IllegalArgumentException e) {
@@ -211,7 +201,11 @@ public class UserDataHandler {
      */
     private void setPreparedStatementParameters(PreparedStatement stmt, Object... params) throws SQLException {
         for (int i = 0; i < params.length; i++) {
-            stmt.setObject(i + 1, params[i]);
+            if (params[i] instanceof ERole) {
+                stmt.setString(i + 1, ((ERole) params[i]).name());
+            } else {
+                stmt.setObject(i + 1, params[i]);
+            }
         }
     }
 }

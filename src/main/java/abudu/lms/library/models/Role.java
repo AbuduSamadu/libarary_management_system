@@ -32,4 +32,9 @@ public class Role {
     public void setName(ERole name) {
         this.name = name;
     }
+    @Override
+    public String toString() {
+       return name.toString();
+    }
+
 }

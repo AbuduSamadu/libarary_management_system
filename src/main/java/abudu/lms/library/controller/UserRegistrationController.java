@@ -64,24 +64,46 @@ public class UserRegistrationController {
         String password = passwordField.getText();
         Role selectedRole = roleComboBox.getValue();
 
-        if (selectedRole == null) {
-            showAlert(AlertType.ERROR, "Error", "Please select a role.");
+        if (firstName.isEmpty() || lastName.isEmpty() || username.isEmpty() || email.isEmpty() || password.isEmpty()) {
+            showAlert(AlertType.ERROR, "Error", "All fields are required.");
             return;
         }
 
-        // Encrypt the password before storing
+        if (!email.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+            showAlert(AlertType.ERROR, "Invalid Email", "Please enter a valid email address.");
+            return;
+        }
+
+        if (password.length() < 8) {
+            showAlert(AlertType.ERROR, "Weak Password", "Password must be at least 8 characters long.");
+            return;
+        }
+
+        if (selectedRole == null) {
+            showAlert(AlertType.ERROR, "Role Missing", "Please select a role.");
+            return;
+        }
+
         String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt(12));
 
-        // Create a set of roles and add the selected role
         Set<Role> roles = new HashSet<>();
         roles.add(selectedRole);
 
-        String result = userDataHandler.registerUser(firstName, lastName, username, email, hashedPassword, roles);
-        showAlert(result.equals("User registered successfully") ? AlertType.INFORMATION : AlertType.ERROR, result, result);
-        if (result.equals("User registered successfully")) {
-            clearFields();
+        try {
+            String result = userDataHandler.registerUser(firstName, lastName, username, email, hashedPassword, roles);
+            if (result.equals("User registered successfully")) {
+                showAlert(AlertType.INFORMATION, "Success", result);
+                clearFields();
+            } else {
+                showAlert(AlertType.ERROR, "Registration Failed", result);
+            }
+        } catch (Exception e) {
+            Logger.getLogger(UserRegistrationController.class.getName())
+                    .log(Level.SEVERE, "An error occurred during user registration", e);
+            showAlert(AlertType.ERROR, "Error", "An unexpected error occurred. Please try again.");
         }
     }
+
 
     @FXML
     public void showLogin() {

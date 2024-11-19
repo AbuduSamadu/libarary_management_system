@@ -55,6 +55,10 @@ public class UserLoginController {
             protected Void call() {
                 User user = userDataHandler.getUserByEmail(email);
                 if (user != null && BCrypt.checkpw(password, user.getPassword())) {
+                    System.out.println("Password entered: " + password);
+                    System.out.println("Stored password hash: " + user.getPassword());
+                    System.out.println("BCrypt match result: " + BCrypt.checkpw(password, user.getPassword()));
+
                     updateMessage("Login successful!");
                     loadDashboard();
                 } else {

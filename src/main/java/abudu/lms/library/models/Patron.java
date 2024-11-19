@@ -12,7 +12,7 @@ public class Patron extends User {
         super(id, firstName, lastName, username, email, password, createdAt, roles);
         this.borrowedBooks = borrowedBooks != null ? borrowedBooks : new HashSet<>();
         this.fines = fines;
-        this.getRoles().add(new Role(1, ERole.ROLE_PATRON)); // Ensures role is set
+        this.getRoles().add(new Role(1, ERole.Patron)); // Ensures role is set
     }
 
     // Getters
