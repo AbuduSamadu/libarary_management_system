@@ -1,23 +1,23 @@
 package abudu.lms.library.utils;
 
-import abudu.lms.library.models.User;
-
 public class UserSession {
-    private static User currentUser;
+    private static UserSession instance;
+    private String username;
 
-    public static void login(User user) {
-        currentUser = user;
+    private UserSession() {}
+
+    public static UserSession getInstance() {
+        if (instance == null) {
+            instance = new UserSession();
+        }
+        return instance;
     }
 
-    public static void logout() {
-        currentUser = null;
+    public String getUsername() {
+        return username;
     }
 
-    public static User getCurrentUser() {
-        return currentUser;
-    }
-
-    public static boolean isAuthenticated() {
-        return currentUser != null;
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

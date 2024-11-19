@@ -17,5 +17,8 @@ module abudu.lms.library {
 
     opens abudu.lms.library to javafx.fxml;
     opens abudu.lms.library.controller to javafx.fxml;
+    opens abudu.lms.library.views.landingPage to javafx.graphics; // Add this line
+
     exports abudu.lms.library;
+    exports abudu.lms.library.views.landingPage; // Add this line
 }

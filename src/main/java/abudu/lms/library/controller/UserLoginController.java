@@ -1,8 +1,17 @@
 package abudu.lms.library.controller;
 
+import java.io.IOException;
+import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import abudu.lms.library.utils.UserSession;
+import org.mindrot.jbcrypt.BCrypt;
+
 import abudu.lms.library.database.UserDataHandler;
 import abudu.lms.library.models.User;
 import abudu.lms.library.views.landingPage.Dashboard;
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -10,17 +19,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
-import org.mindrot.jbcrypt.BCrypt;
-
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.Objects;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class UserLoginController {
 
@@ -57,7 +59,8 @@ public class UserLoginController {
                 User user = userDataHandler.getUserByEmail(email);
                 if (user != null && BCrypt.checkpw(password, user.getPassword())) {
                     updateMessage("Login successful!");
-                    loadDashboard();
+                    UserSession.getInstance().setUsername(user.getName());
+                    Platform.runLater(() -> loadDashboard());
                 } else {
                     updateMessage("Invalid email or password.");
                 }
@@ -80,9 +83,13 @@ public class UserLoginController {
     }
 
     private void loadDashboard() {
-        Dashboard dashboard = new Dashboard();
-        Stage stage = (Stage) emailField.getScene().getWindow();
-        dashboard.start(stage);
+        try {
+            Dashboard dashboard = new Dashboard();
+            Stage stage = (Stage) emailField.getScene().getWindow();
+            dashboard.start(stage);
+        } catch (Exception e) {
+            Logger.getLogger(UserLoginController.class.getName()).log(Level.SEVERE, "Error loading dashboard", e);
+        }
     }
 
     private void showAlert(AlertType alertType, String title, String content) {
@@ -101,5 +108,4 @@ public class UserLoginController {
             Logger.getLogger(UserLoginController.class.getName()).log(Level.SEVERE, "An error occurred while trying to load the registration screen", e);
         }
     }
-
 }

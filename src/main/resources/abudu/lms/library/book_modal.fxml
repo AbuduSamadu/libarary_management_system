@@ -2,13 +2,20 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox xmlns="http://javafx.com/javafx/17.0.6" xmlns:fx="http://javafx.com/fxml/1" fx:controller="abudu.lms.library.controller.ModalController">
+<VBox xmlns="http://javafx.com/javafx/17.0.6" xmlns:fx="http://javafx.com/fxml/1" fx:controller="abudu.lms.library.controller.BookController">
     <children>
-        <Label fx:id="operationLabel" text="Operation: " />
-        <Button text="Close" onAction="#handleClose" />
+        <Label text="Book Details" />
+        <TextField fx:id="titleField" promptText="Title" />
+        <TextField fx:id="authorField" promptText="Author" />
+        <TextField fx:id="publisherField" promptText="Publisher" />
+        <DatePicker fx:id="yearPicker" promptText="Year" />
+        <Button text="Save" onAction="#handleSave" />
+        <Button text="Cancel" onAction="#handleCancel" />
     </children>
     <padding>
         <Insets top="20" right="20" bottom="20" left="20" />

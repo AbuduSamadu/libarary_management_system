@@ -4,7 +4,12 @@ import abudu.lms.library.database.BookDataHandler;
 import abudu.lms.library.models.Book;
 import abudu.lms.library.models.BookOperation;
 import javafx.fxml.FXML;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+
+import java.time.LocalDate;
+import java.util.UUID;
 
 public class BookController {
 
@@ -15,15 +20,12 @@ public class BookController {
     @FXML
     private TextField publisherField;
     @FXML
-    private TextField yearField;
-    @FXML
-    private TextField isbnField;
-    @FXML
-    private TextField idField;
+    private DatePicker yearPicker;
 
     private final BookDataHandler bookDataHandler;
     private BookOperation currentOperation;
     private Book currentBook;
+    private Stage modalStage;
 
     public BookController() {
         this.bookDataHandler = new BookDataHandler();
@@ -36,20 +38,19 @@ public class BookController {
             titleField.setText(book.getTitle());
             authorField.setText(book.getAuthor());
             publisherField.setText(book.getPublisher());
-            yearField.setText(String.valueOf(book.getYear()));
+            yearPicker.setValue(LocalDate.of(book.getYear(), 1, 1));
         }
     }
 
     @FXML
     private void handleSave() {
-        int id = Integer.parseInt(idField.getText());
         String title = titleField.getText();
         String author = authorField.getText();
         String publisher = publisherField.getText();
-        int year = Integer.parseInt(yearField.getText());
-        String isbn = isbnField.getText();
+        int year = yearPicker.getValue().getYear();
+        String isbn = UUID.randomUUID().toString(); // Generate a unique ISBN
+        int id = bookDataHandler.generateNewId(); // Implement this method to generate a new ID
         boolean available = true;
-
 
         Book book = new Book(id, title, author, publisher, year, isbn, available);
 
@@ -71,10 +72,15 @@ public class BookController {
                 // Implement return logic
                 break;
         }
+        modalStage.close();
     }
 
     @FXML
     private void handleCancel() {
-        // Implement cancel logic
+        modalStage.close();
+    }
+
+    public void setModalStage(Stage modalStage) {
+        this.modalStage = modalStage;
     }
 }

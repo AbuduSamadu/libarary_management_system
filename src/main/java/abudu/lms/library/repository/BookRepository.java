@@ -10,9 +10,9 @@ import java.util.List;
 
 
 public interface BookRepository {
-    boolean addBook(Book book);
-    boolean updateBook(Book book);
-    boolean deleteBook(int bookId);
+    void addBook(Book book);
+    void updateBook(Book book);
+    void deleteBook(int bookId);
     Book getBookByIsbn(int bookIsbn);
 
     Book getBookById(int bookId);

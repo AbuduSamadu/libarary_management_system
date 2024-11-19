@@ -3,117 +3,77 @@ package abudu.lms.library.repository;
 import abudu.lms.library.database.DatabaseHandler;
 import abudu.lms.library.models.Book;
 
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 public class BookRepositoryImpl implements BookRepository {
     private final DatabaseHandler dbHandler;
+
     public BookRepositoryImpl() {
         dbHandler = DatabaseHandler.getInstance();
     }
 
-    /**
-     * Add a new book to the database.
-     *
-     * @param book The book to be added.
-     * @return true if the book was added successfully, false otherwise.
-     */
-
     @Override
-    public boolean addBook(Book book) {
-        String query = "INSERT INTO books (id,title,author, publihser, year, isbn, avilable ) VALUES (?, ?, ?, ?)";
+    public void addBook(Book book) {
+        String query = "INSERT INTO books (id, title, author, publisher, year, isbn, available) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = dbHandler.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(1, book.getTitle());
-            statement.setString(2, book.getAuthor());
-            statement.setString(3, book.getIsbn());
-            statement.setString(4, book.getPublisher());
-            statement.setInt(5, book.getYear());
-            statement.setBoolean(6, book.isAvailable());
-
-            return statement.executeUpdate() > 0;
-        } catch (SQLException e) {
-            Logger.getLogger(BookRepositoryImpl.class.getName()).log(Level.SEVERE, "An error occurred while adding a book to the database", e);
-            return false;
-        }
-    }
-
-
-    /**
-     * Update a book in the database.
-     *
-     * @param book The book to be updated.
-     * @return true if the book was updated successfully, false otherwise.
-     */
-
-    @Override
-    public boolean updateBook(Book book) {
-        String query = "UPDATE books SET title = ?, author = ?, isbn = ?, publishedDate = ? WHERE id = ?";
-        try (Connection connection = dbHandler.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(1, book.getTitle());
-            statement.setString(2, book.getAuthor());
-            statement.setString(3, book.getIsbn());
+            statement.setInt(1, book.getId());
+            statement.setString(2, book.getTitle());
+            statement.setString(3, book.getAuthor());
             statement.setString(4, book.getPublisher());
             statement.setInt(5, book.getYear());
             statement.setString(6, book.getIsbn());
             statement.setBoolean(7, book.isAvailable());
-            statement.setInt(5, book.getId());
-            return statement.executeUpdate() > 0;
+
+            statement.executeUpdate();
         } catch (SQLException e) {
-            Logger.getLogger(BookRepositoryImpl.class.getName()).log(Level.SEVERE, "An error occurred while updating a book in the database", e);
-            return false;
+            Logger.getLogger(BookRepositoryImpl.class.getName()).log(Level.SEVERE, "An error occurred while adding a book to the database", e);
         }
     }
 
-    /**
-     * Delete a book from the database.
-     *
-     * @param bookId The ID of the book to be deleted.
-     * @return true if the book was deleted successfully, false otherwise.
-     */
+    @Override
+    public void updateBook(Book book) {
+        String query = "UPDATE books SET title = ?, author = ?, publisher = ?, year = ?, isbn = ?, available = ? WHERE id = ?";
+        try (Connection connection = dbHandler.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, book.getTitle());
+            statement.setString(2, book.getAuthor());
+            statement.setString(3, book.getPublisher());
+            statement.setInt(4, book.getYear());
+            statement.setString(5, book.getIsbn());
+            statement.setBoolean(6, book.isAvailable());
+            statement.setInt(7, book.getId());
+
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            Logger.getLogger(BookRepositoryImpl.class.getName()).log(Level.SEVERE, "An error occurred while updating a book in the database", e);
+        }
+    }
 
     @Override
-    public boolean deleteBook(int bookId) {
+    public void deleteBook(int bookId) {
         String query = "DELETE FROM books WHERE id = ?";
         try (Connection connection = dbHandler.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, bookId);
-            return statement.executeUpdate() > 0;
+            statement.executeUpdate();
         } catch (SQLException e) {
             Logger.getLogger(BookRepositoryImpl.class.getName()).log(Level.SEVERE, "An error occurred while deleting a book from the database", e);
-            return false;
         }
     }
-
-    /**
-     * Get a book from the database by its ISBN.
-     *
-     * @param bookIsbn The ISBN of the book to be retrieved.
-     * @return The book with the specified ISBN, or null if the book is not found.
-     */
 
     @Override
     public Book getBookByIsbn(int bookIsbn) {
         return null;
     }
 
-    /**
-     * Get a book from the database by its ID.
-     *
-     * @param bookId The ID of the book to be retrieved.
-     * @return The book with the specified ID, or null if the book is not found.
-     */
-
     @Override
     public Book getBookById(int bookId) {
-        String query = "SELECT * FROM books WHERE  = ?";
+        String query = "SELECT * FROM books WHERE id = ?";
         try (Connection connection = dbHandler.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, bookId);
@@ -134,12 +94,6 @@ public class BookRepositoryImpl implements BookRepository {
         }
         return null;
     }
-
-    /**
-     * Get all books from the database.
-     *
-     * @return A list of all books in the database.
-     */
 
     @Override
     public List<Book> getAllBooks() {
@@ -164,13 +118,6 @@ public class BookRepositoryImpl implements BookRepository {
         }
         return books;
     }
-
-    /**
-     * Search for books in the database.
-     *
-     * @param query The search query.
-     * @return A list of books that match the search query.
-     */
 
     @Override
     public List<Book> searchBooks(String query) {

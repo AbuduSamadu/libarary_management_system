@@ -2,14 +2,17 @@ package abudu.lms.library.views.landingPage;
 
 import java.io.IOException;
 
+import abudu.lms.library.controller.BookController;
 import abudu.lms.library.controller.ModalController;
 import abudu.lms.library.models.BookOperation;
+import abudu.lms.library.utils.UserSession;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -19,6 +22,12 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class Dashboard extends Application {
+
+    private final UserSession userSession;
+
+    public Dashboard() {
+        this.userSession = UserSession.getInstance();
+    }
 
     @Override
     public void start(Stage primaryStage) {
@@ -55,6 +64,9 @@ public class Dashboard extends Application {
         Button homeButton = new Button("Home");
         Button aboutButton = new Button("About");
         Button contactButton = new Button("Contact");
+
+        Label usernameLabel = new Label("Welcome, " + userSession.getUsername());
+        usernameLabel.setStyle("-fx-text-fill: white; -fx-font-size: 14px;");
 
         navbar.getChildren().addAll(homeButton, aboutButton, contactButton);
         return navbar;
@@ -145,16 +157,15 @@ public class Dashboard extends Application {
             modalStage.initOwner(primaryStage);
             modalStage.setTitle("Book Operation");
 
-            ModalController controller = loader.getController();
+            BookController controller = loader.getController();
             controller.setModalStage(modalStage);
-            controller.setOperation(operation);
+            controller.setOperation(operation, null);
 
             modalStage.showAndWait();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
     public static void main(String[] args) {
         launch(args);
     }

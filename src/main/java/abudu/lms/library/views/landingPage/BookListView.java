@@ -45,6 +45,15 @@ public class BookListView {
         TableColumn<Book, String> isbnColumn = new TableColumn<>("ISBN");
         isbnColumn.setCellValueFactory(new PropertyValueFactory<>("isbn"));
 
+        TableColumn<Book, String> publisherColumn = new TableColumn<>("Publisher");
+        publisherColumn.setCellValueFactory(new PropertyValueFactory<>("publisher"));
+
+        TableColumn<Book, Integer> yearColumn = new TableColumn<>("Year");
+        yearColumn.setCellValueFactory(new PropertyValueFactory<>("year"));
+
+        TableColumn<Book, Boolean> availabilityColumn = new TableColumn<>("Availability");
+        availabilityColumn.setCellValueFactory(new PropertyValueFactory<>("available"));
+
         TableColumn<Book, Void> borrowColumn = new TableColumn<>("Borrow");
         borrowColumn.setCellFactory(createBorrowButtonCellFactory(table, data));
 
@@ -53,7 +62,7 @@ public class BookListView {
 
         // Add columns to the table
         table.setItems(data);
-        table.getColumns().addAll(idColumn, titleColumn, authorColumn, isbnColumn, borrowColumn, returnColumn);
+        table.getColumns().addAll(idColumn, titleColumn, authorColumn, isbnColumn, publisherColumn, yearColumn, availabilityColumn, borrowColumn, returnColumn);
 
         // Handle empty table
         table.setPlaceholder(new Label("No books available."));

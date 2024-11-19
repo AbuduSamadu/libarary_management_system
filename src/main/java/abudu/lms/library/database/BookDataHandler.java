@@ -4,10 +4,7 @@ import java.util.List;
 
 import abudu.lms.library.models.Book;
 
-import java.util.List;
-
 import abudu.lms.library.repository.BookRepository;
-import abudu.lms.library.repository.BookRepositoryImpl;
 
 public class BookDataHandler {
 
@@ -16,18 +13,15 @@ public class BookDataHandler {
     public BookDataHandler() {
         this.bookRepository = new BookRepository() {
             @Override
-            public boolean addBook(Book book) {
-                return false;
+            public void addBook(Book book) {
             }
 
             @Override
-            public boolean updateBook(Book book) {
-                return false;
+            public void updateBook(Book book) {
             }
 
             @Override
-            public boolean deleteBook(int bookId) {
-                return false;
+            public void deleteBook(int bookId) {
             }
 
             @Override
@@ -62,16 +56,16 @@ public class BookDataHandler {
         };
     }
 
-    public boolean addBook(Book book) {
-        return bookRepository.addBook(book);
+    public void addBook(Book book) {
+        bookRepository.addBook(book);
     }
 
-    public boolean updateBook(Book book) {
-        return bookRepository.updateBook(book);
+    public void updateBook(Book book) {
+        bookRepository.updateBook(book);
     }
 
-    public boolean deleteBook(int bookId) {
-        return bookRepository.deleteBook(bookId);
+    public void deleteBook(int bookId) {
+        bookRepository.deleteBook(bookId);
     }
 
     public Book getBookById(int bookId) {
@@ -89,5 +83,10 @@ public class BookDataHandler {
 
     public boolean borrowBook(int id) {
         return bookRepository.borrowBook(id);
+    }
+
+    public int generateNewId() {
+        List<Book> books = bookRepository.getAllBooks();
+        return books.size() + 1;
     }
 }
