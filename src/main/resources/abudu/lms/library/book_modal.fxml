@@ -5,7 +5,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox xmlns="http://javafx.com/javafx/17.0.6" xmlns:fx="http://javafx.com/fxml/1" fx:controller="abudu.lms.library.controller.BookModalController">
+<VBox xmlns="http://javafx.com/javafx/17.0.6" xmlns:fx="http://javafx.com/fxml/1" fx:controller="abudu.lms.library.controller.ModalController">
     <children>
         <Label fx:id="operationLabel" text="Operation: " />
         <Button text="Close" onAction="#handleClose" />

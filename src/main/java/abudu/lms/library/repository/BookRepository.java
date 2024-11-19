@@ -19,4 +19,8 @@ public interface BookRepository {
 
     List<Book> getAllBooks();
     List<Book> searchBooks(String query);
+
+    boolean returnBook(int id);
+
+    boolean borrowBook(int id);
 }

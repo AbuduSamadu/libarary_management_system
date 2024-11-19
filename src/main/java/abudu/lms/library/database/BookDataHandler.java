@@ -49,6 +49,16 @@ public class BookDataHandler {
             public List<Book> searchBooks(String query) {
                 return List.of();
             }
+
+            @Override
+            public boolean returnBook(int id) {
+                return false;
+            }
+
+            @Override
+            public boolean borrowBook(int id) {
+                return false;
+            }
         };
     }
 
@@ -70,5 +80,14 @@ public class BookDataHandler {
 
     public List<Book> getAllBooks() {
         return bookRepository.getAllBooks();
+    }
+
+
+    public boolean returnBook(int id) {
+        return bookRepository.returnBook(id);
+    }
+
+    public boolean borrowBook(int id) {
+        return bookRepository.borrowBook(id);
     }
 }

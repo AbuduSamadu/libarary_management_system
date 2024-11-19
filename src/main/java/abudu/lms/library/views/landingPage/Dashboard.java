@@ -2,7 +2,7 @@ package abudu.lms.library.views.landingPage;
 
 import java.io.IOException;
 
-import abudu.lms.library.controller.BookModalController;
+import abudu.lms.library.controller.ModalController;
 import abudu.lms.library.models.BookOperation;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -33,8 +33,9 @@ public class Dashboard extends Application {
         VBox sidebar = createSidebar(primaryStage);
         root.setLeft(sidebar);
 
-        // Create the main board
-        VBox mainBoard = new VBox();
+        // Render the BookListView on the main dashboard
+        BookListView bookListView = new BookListView();
+        VBox mainBoard = bookListView.createBookListView();
         mainBoard.setPadding(new Insets(20));
         root.setCenter(mainBoard);
 
@@ -144,7 +145,7 @@ public class Dashboard extends Application {
             modalStage.initOwner(primaryStage);
             modalStage.setTitle("Book Operation");
 
-            BookModalController controller = loader.getController();
+            ModalController controller = loader.getController();
             controller.setModalStage(modalStage);
             controller.setOperation(operation);
 

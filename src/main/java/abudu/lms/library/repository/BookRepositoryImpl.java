@@ -176,4 +176,14 @@ public class BookRepositoryImpl implements BookRepository {
     public List<Book> searchBooks(String query) {
         return List.of();
     }
+
+    @Override
+    public boolean returnBook(int id) {
+        return false;
+    }
+
+    @Override
+    public boolean borrowBook(int id) {
+        return false;
+    }
 }
