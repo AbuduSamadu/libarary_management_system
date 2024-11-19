@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx/17.0.6" xmlns:fx="http://javafx.com/fxml/1" fx:controller="abudu.lms.library.controller.BookModalController">
+    <children>
+        <Label fx:id="operationLabel" text="Operation: " />
+        <Button text="Close" onAction="#handleClose" />
+    </children>
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20" />
+    </padding>
+    <spacing>10</spacing>
+</VBox>

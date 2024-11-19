@@ -1,5 +1,9 @@
 package abudu.lms.library.views.landingPage;
 
+import java.io.IOException;
+
+import abudu.lms.library.controller.BookModalController;
+import abudu.lms.library.models.BookOperation;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -11,9 +15,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
-
-import java.io.IOException;
 
 public class Dashboard extends Application {
 
@@ -73,14 +76,42 @@ public class Dashboard extends Application {
         Button usersButton = createSidebarButton("Users");
         Button settingsButton = createSidebarButton("Settings");
 
-        // Add buttons to the sidebar
-        sidebar.getChildren().addAll(homeButton, booksButton, usersButton, settingsButton);
+        // Create dropdown menu for Books button
+        VBox booksDropdown = createBooksDropdown(primaryStage);
+        booksDropdown.setVisible(false);
+
+        // Toggle dropdown menu visibility on click
+        booksButton.setOnAction(e -> booksDropdown.setVisible(!booksDropdown.isVisible()));
+
+        // Add buttons and dropdown to the sidebar
+        sidebar.getChildren().addAll(homeButton, booksButton, usersButton, booksDropdown, settingsButton);
         sidebar.setAlignment(Pos.TOP_CENTER);
 
         // Set action for the Users button
         usersButton.setOnAction(e -> loadLoginPage(primaryStage));
 
         return sidebar;
+    }
+
+    private VBox createBooksDropdown(Stage primaryStage) {
+        VBox dropdown = new VBox(10);
+        dropdown.setPadding(new Insets(10));
+        dropdown.setStyle("-fx-background-color: #34495e;");
+
+        Button addBookButton = new Button("Add Book");
+        Button updateBookButton = new Button("Update Book");
+        Button deleteBookButton = new Button("Delete Book");
+        Button borrowBookButton = new Button("Borrow Book");
+        Button returnBookButton = new Button("Return Book");
+
+        addBookButton.setOnAction(e -> openBookModal(primaryStage, BookOperation.ADD));
+        updateBookButton.setOnAction(e -> openBookModal(primaryStage, BookOperation.UPDATE));
+        deleteBookButton.setOnAction(e -> openBookModal(primaryStage, BookOperation.DELETE));
+        borrowBookButton.setOnAction(e -> openBookModal(primaryStage, BookOperation.BORROW));
+        returnBookButton.setOnAction(e -> openBookModal(primaryStage, BookOperation.RETURN));
+
+        dropdown.getChildren().addAll(addBookButton, updateBookButton, deleteBookButton, borrowBookButton, returnBookButton);
+        return dropdown;
     }
 
     private Button createSidebarButton(String text) {
@@ -95,10 +126,29 @@ public class Dashboard extends Application {
     private void loadLoginPage(Stage stage) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/abudu/lms/library/login.fxml"));
-            Scene scene = new Scene(fxmlLoader.load(), 320, 240);
+            Scene scene = new Scene(fxmlLoader.load(), 620, 540);
             scene.getStylesheets().add(getClass().getResource("/abudu/lms/library/dark-theme.css").toExternalForm());
             stage.setScene(scene);
             stage.setTitle("Login");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openBookModal(Stage primaryStage, BookOperation operation) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/abudu/lms/library/book_modal.fxml"));
+            Stage modalStage = new Stage();
+            modalStage.setScene(new Scene(loader.load()));
+            modalStage.initModality(Modality.WINDOW_MODAL);
+            modalStage.initOwner(primaryStage);
+            modalStage.setTitle("Book Operation");
+
+            BookModalController controller = loader.getController();
+            controller.setModalStage(modalStage);
+            controller.setOperation(operation);
+
+            modalStage.showAndWait();
         } catch (IOException e) {
             e.printStackTrace();
         }
