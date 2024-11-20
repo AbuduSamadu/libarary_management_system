@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      fx:id="resourceBox"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="abudu.lms.library.controller.BookController"
+      stylesheets="Styles/resource.css "
+      spacing="10">
+
+    <!-- Navigation Bar -->
+    <HBox styleClass="nav-bar">
+        <Label text="Resource Management" styleClass="nav-title"/>
+        <Pane HBox.hgrow="ALWAYS" />
+        <Button fx:id="homeButton" styleClass="home-button" onAction="#handleHomeButtonClicked">
+            <graphic>
+                <FontIcon iconLiteral="fas-home" iconSize="24" iconColor="white" />
+            </graphic>
+        </Button>
+    </HBox>
+
+    <!-- Main Content -->
+    <HBox spacing="20" VBox.vgrow="ALWAYS" style="-fx-padding: 20;">
+        <!-- Left Panel -->
+        <VBox spacing="20" prefWidth="300">
+            <!-- Add Resource Form -->
+            <VBox spacing="15" styleClass="form-container">
+                <Label text="Add New Resource" styleClass="section-header"/>
+                <TextField fx:id="titleField" styleClass="modern-field" promptText="Title"/>
+                <TextField fx:id="authorField" styleClass="modern-field" promptText="Author"/>
+                <TextField fx:id="isbnField" styleClass="modern-field" promptText="ISBN"/>
+                <ComboBox fx:id="categoryComboBox" styleClass="modern-field" promptText="Category"/>
+                <TextField fx:id="publisherField" styleClass="modern-field" promptText="Publisher"/>
+                <TextField fx:id="quantityField" styleClass="modern-field" promptText="Quantity"/>
+                <TextArea fx:id="descriptionArea" styleClass="modern-field" promptText="Description" prefRowCount="3"/>
+                <HBox spacing="10">
+                    <Button text="Add Resource" styleClass="primary-button" onAction="#handleAddResource"/>
+                    <Button text="Clear" styleClass="secondary-button" onAction="#handleClearForm"/>
+                </HBox>
+            </VBox>
+
+            <!-- Filter Section -->
+            <VBox spacing="15" styleClass="filter-container">
+                <Label text="Filters" styleClass="section-header"/>
+                <ComboBox fx:id="filterCategoryComboBox" styleClass="modern-field" promptText="Filter by Category" onAction="#handleApplyFilters"/>
+                <ComboBox fx:id="filterStatusComboBox" styleClass="modern-field" promptText="Filter by Status"/>
+                <TextField fx:id="filterPublisherField" styleClass="modern-field" promptText="Filter by Publisher"/>
+                <DatePicker fx:id="acquisitionDatePicker" styleClass="modern-field" promptText="Filter by Acquisition Date"/>
+                <Button text="Apply Filters" styleClass="accent-button" onAction="#handleApplyFilters"/>
+            </VBox>
+        </VBox>
+
+        <!-- Right Panel -->
+        <VBox spacing="15" HBox.hgrow="ALWAYS" styleClass="right-panel">
+            <!-- Search and Actions Container -->
+            <HBox spacing="15" styleClass="search-actions-container">
+                <TextField fx:id="searchField" promptText="Search resources..."
+                           styleClass="search-field" HBox.hgrow="ALWAYS"/>
+                <Button text="Export" styleClass="tool-button" onAction="#handleExport">
+                    <graphic>
+                        <FontIcon iconLiteral="fas-file-export" />
+                    </graphic>
+                </Button>
+                <Button text="Import" styleClass="tool-button" onAction="#handleImport">
+                    <graphic>
+                        <FontIcon iconLiteral="fas-file-import" />
+                    </graphic>
+                </Button>
+                <Button text="Generate Report" styleClass="tool-button" onAction="#handleGenerateReport">
+                    <graphic>
+                        <FontIcon iconLiteral="fas-chart-bar" />
+                    </graphic>
+                </Button>
+                <Button text="Refresh" styleClass="tool-button" onAction="#handleRefresh">
+                    <graphic>
+                        <FontIcon iconLiteral="fas-sync" />
+                    </graphic>
+                </Button>
+            </HBox>
+
+            <!-- Resources List Label -->
+            <Label text="Library Resources" styleClass="users-list-header"/>
+
+            <!-- Resources Table -->
+            <TableView fx:id="resourcesTable" VBox.vgrow="ALWAYS" styleClass="modern-table">
+                <columns>
+                    <TableColumn fx:id="idColumn" text="ID" prefWidth="50"/>
+                    <TableColumn fx:id="titleColumn" text="Title" prefWidth="200"/>
+                    <TableColumn fx:id="authorColumn" text="Author" prefWidth="150" visible="false"/>
+                    <TableColumn fx:id="isbnColumn" text="ISBN" prefWidth="120" visible="false"/>
+                    <TableColumn fx:id="categoryColumn" text="Category" prefWidth="100"/>
+                    <TableColumn fx:id="publicationColumn" text="Publication Date" prefWidth="120" visible="false"/>
+                    <TableColumn fx:id="issueNumberColumn" text="Issue Number" visible="false" />
+                    <TableColumn fx:id="quantityColumn" text="Quantity" visible="false"/>
+                    <TableColumn fx:id="availableColumn" text="Status"/>
+                    <TableColumn fx:id="formatColumn" text="Status" prefWidth="100" visible="false"/>
+                    <TableColumn fx:id="actionsColumn" text="Actions" prefWidth="150"/>
+                </columns>
+            </TableView>
+
+            <TableView fx:id="journalTable" visible="false" VBox.vgrow="ALWAYS" styleClass="modern-table">
+                <columns>
+                    <!-- Define columns for the journal table here -->
+                </columns>
+            </TableView>
+
+            <!-- Status Bar -->
+            <HBox styleClass="status-bar">
+                <Label fx:id="statusLabel" text="Ready" styleClass="status-text"/>
+                <Pane HBox.hgrow="ALWAYS"/>
+                <Label fx:id="totalResourcesLabel" text="Total Resources: 0" styleClass="status-text"/>
+                <Label fx:id="availableResourcesLabel" text=" | Available: 0" styleClass="status-text"/>
+                <Label fx:id="checkedOutLabel" text=" | Checked Out: 0" styleClass="status-text"/>
+            </HBox>
+        </VBox>
+    </HBox>
+</VBox>

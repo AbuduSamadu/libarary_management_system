@@ -101,7 +101,7 @@ public class UserLoginController {
     @FXML
     public void showRegister() {
         try {
-            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/abudu/lms/library/register.fxml")));
+            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/abudu/lms/library/dashboard.fxml")));
             Stage stage = (Stage) emailField.getScene().getWindow();
             stage.setScene(new Scene(root, 800, 600));
         } catch (IOException e) {

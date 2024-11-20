@@ -2,6 +2,7 @@ module abudu.lms.library {
     requires javafx.controls;
     requires javafx.fxml;
     requires javafx.web;
+    requires javafx.base; // Add this line
     requires org.kordamp.ikonli.core;
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.ikonli.fontawesome5;
@@ -17,8 +18,8 @@ module abudu.lms.library {
 
     opens abudu.lms.library to javafx.fxml;
     opens abudu.lms.library.controller to javafx.fxml;
-    opens abudu.lms.library.views.landingPage to javafx.graphics; // Add this line
+    opens abudu.lms.library.views.landingPage to javafx.graphics;
 
     exports abudu.lms.library;
-    exports abudu.lms.library.views.landingPage; // Add this line
+    exports abudu.lms.library.views.landingPage;
 }

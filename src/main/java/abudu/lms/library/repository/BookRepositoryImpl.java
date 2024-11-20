@@ -48,6 +48,7 @@ public class BookRepositoryImpl implements BookRepository {
             statement.setBoolean(6, book.isAvailable());
             statement.setInt(7, book.getId());
 
+
             statement.executeUpdate();
         } catch (SQLException e) {
             Logger.getLogger(BookRepositoryImpl.class.getName()).log(Level.SEVERE, "An error occurred while updating a book in the database", e);
@@ -86,7 +87,11 @@ public class BookRepositoryImpl implements BookRepository {
                         resultSet.getString("publisher"),
                         resultSet.getInt("year"),
                         resultSet.getString("isbn"),
-                        resultSet.getBoolean("available")
+                        resultSet.getBoolean("available"),
+                        resultSet.getString("category"),
+                        resultSet.getInt("quantity"),
+                        resultSet.getString("description")
+
                 );
             }
         } catch (SQLException e) {
@@ -110,7 +115,10 @@ public class BookRepositoryImpl implements BookRepository {
                         resultSet.getString("publisher"),
                         resultSet.getInt("year"),
                         resultSet.getString("isbn"),
-                        resultSet.getBoolean("available")
+                        resultSet.getBoolean("available"),
+                        resultSet.getString("category"),
+                        resultSet.getInt("quantity"),
+                        resultSet.getString("description")
                 ));
             }
         } catch (SQLException e) {

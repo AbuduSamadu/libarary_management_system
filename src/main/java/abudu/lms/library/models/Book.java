@@ -1,7 +1,5 @@
 package abudu.lms.library.models;
 
-import java.util.UUID;
-
 public class Book {
     private int id;
     private String title;
@@ -10,15 +8,21 @@ public class Book {
     private int year;
     private String isbn;
     private boolean available;
+    private String category;
+    private int quantity;
+    private String description;
 
-    public Book(int id, String title, String author, String publisher, int year, String isbn, boolean available) {
+    public Book(int id, String title, String author, String publisher, int year, String isbn, boolean available, String category, int quantity, String description) {
         this.id = id;
         this.title = title;
         this.author = author;
         this.publisher = publisher;
         this.year = year;
-        this.isbn = UUID.randomUUID().toString(); // Auto-generate ISBN using UUID
+        this.isbn = isbn;
         this.available = available;
+        this.category = category;
+        this.quantity = quantity;
+        this.description = description;
     }
 
     // Getters and setters
@@ -77,5 +81,29 @@ public class Book {
 
     public void setAvailable(boolean available) {
         this.available = available;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

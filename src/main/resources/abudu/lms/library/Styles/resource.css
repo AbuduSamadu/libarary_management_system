@@ -1,0 +1,351 @@
+/* Include all previous styles from UserManagement.css */
+
+/* Root styles and variables */
+.root {
+    -fx-font-family: 'Segoe UI', Arial, sans-serif;
+    -fx-background-color: #f5f6fa;
+
+    /* Custom colors */
+    -fx-primary: #4a90e2;
+    -fx-primary-dark: #357abd;
+    -fx-secondary: #6c757d;
+    -fx-accent: #2ecc71;
+    -fx-error: #e74c3c;
+    -fx-warning: #f1c40f;
+    -fx-background: #f5f6fa;
+    -fx-card: #ffffff;
+    -fx-nav-bg: #2c3e50;
+}
+
+/* Navigation bar - Updated */
+.nav-bar {
+    -fx-background-color: -fx-nav-bg;
+    -fx-padding: 0 25;
+    -fx-pref-height: 70px;
+    -fx-alignment: center-left;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 3);
+    -fx-background-insets: 0 0 5 0;
+    -fx-spacing: 15;
+}
+
+/* Home button - New */
+.home-button {
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+    -fx-padding: 8;
+    -fx-background-radius: 50%;
+    -fx-transition: all 0.2s ease-in-out;
+}
+
+.home-button:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.2);
+    -fx-scale-x: 1.1;
+    -fx-scale-y: 1.1;
+}
+
+/* Right panel - New */
+.right-panel {
+    -fx-background-color: white;
+    -fx-padding: 20px;
+    -fx-background-radius: 5px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);
+    -fx-spacing: 15;
+}
+
+/* Search actions container - New */
+.search-actions-container {
+    -fx-padding: 0 0 10 0;
+    -fx-spacing: 15;
+    -fx-alignment: center;
+}
+
+/* Users list header - New */
+.users-list-header {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+    -fx-padding: 0 0 10 0;
+}
+
+/* Modern Button Styles */
+.primary-button {
+    -fx-background-color: -fx-primary;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5px;
+    -fx-padding: 10 20;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 4, 0, 0, 1);
+    -fx-transition: all 0.2s ease-in-out;
+}
+
+.primary-button:hover {
+    -fx-background-color: derive(-fx-primary, -10%);
+    -fx-translate-y: -2px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 8, 0, 0, 2);
+}
+
+.secondary-button {
+    -fx-background-color: transparent;
+    -fx-border-color: -fx-secondary;
+    -fx-text-fill: -fx-secondary;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-padding: 10 20;
+    -fx-cursor: hand;
+    -fx-font-weight: bold;
+    -fx-transition: all 0.2s ease-in-out;
+}
+
+.secondary-button:hover {
+    -fx-background-color: -fx-secondary;
+    -fx-text-fill: white;
+    -fx-translate-y: -2px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 4, 0, 0, 1);
+}
+
+.accent-button {
+    -fx-background-color: -fx-accent;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5px;
+    -fx-padding: 10 20;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 4, 0, 0, 1);
+    -fx-transition: all 0.2s ease-in-out;
+}
+
+.accent-button:hover {
+    -fx-background-color: derive(-fx-accent, -10%);
+    -fx-translate-y: -2px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 8, 0, 0, 2);
+}
+
+/* Edit and Delete Buttons */
+.edit-button {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+    -fx-background-radius: 5px;
+    -fx-padding: 8 15;
+    -fx-cursor: hand;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-transition: all 0.2s ease-in-out;
+}
+
+.edit-button:hover {
+    -fx-background-color: derive(#3498db, -10%);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 4, 0, 0, 1);
+    -fx-translate-y: -1px;
+}
+
+.delete-button {
+    -fx-background-color: -fx-error;
+    -fx-text-fill: white;
+    -fx-background-radius: 5px;
+    -fx-padding: 8 15;
+    -fx-cursor: hand;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-transition: all 0.2s ease-in-out;
+}
+
+.delete-button:hover {
+    -fx-background-color: derive(-fx-error, -10%);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 4, 0, 0, 1);
+    -fx-translate-y: -1px;
+}
+
+/* Tool buttons - Updated */
+.tool-button {
+    -fx-background-color: white;
+    -fx-text-fill: -fx-secondary;
+    -fx-border-color: #e0e0e0;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-padding: 8 20;
+    -fx-cursor: hand;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 4, 0, 0, 1);
+    -fx-transition: all 0.2s ease-in-out;
+    -fx-min-height: 35px;
+    -fx-alignment: center;
+}
+
+.tool-button:hover {
+    -fx-background-color: -fx-secondary;
+    -fx-border-color: -fx-secondary;
+    -fx-text-fill: white;
+    -fx-translate-y: -2px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 8, 0, 0, 2);
+}
+
+.nav-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-padding: 0;
+    -fx-opacity: 0.95;
+    -fx-translate-y: 0;
+    -fx-transition: all 0.3s ease-in-out;
+}
+
+.nav-title:hover {
+    -fx-opacity: 1;
+    -fx-translate-y: -2;
+}
+
+/* Section headers */
+.section-header {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+    -fx-padding: 0 0 5 0;
+}
+
+/* Form containers */
+.form-container, .filter-container {
+    -fx-background-color: white;
+    -fx-padding: 20;
+    -fx-background-radius: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 2);
+    -fx-transition: all 0.3s ease-in-out;
+}
+
+.form-container:hover, .filter-container:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 3);
+}
+
+/* Modern fields */
+.modern-field {
+    -fx-background-color: #f8f9fa;
+    -fx-background-radius: 5px;
+    -fx-border-color: #dee2e6;
+    -fx-border-radius: 5px;
+    -fx-padding: 8px;
+    -fx-font-size: 14px;
+    -fx-pref-height: 40px;
+    -fx-transition: all 0.3s ease-in-out;
+}
+
+.modern-field:focused {
+    -fx-background-color: white;
+    -fx-border-color: -fx-primary;
+    -fx-effect: dropshadow(gaussian, rgba(74,144,226,0.2), 5, 0, 0, 0);
+}
+
+/* Search field */
+.search-field {
+    -fx-background-color: #f8f9fa;
+    -fx-background-radius: 25px;
+    -fx-border-radius: 25px;
+    -fx-border-color: #dee2e6;
+    -fx-padding: 8px 15px;
+    -fx-font-size: 14px;
+    -fx-pref-height: 35px;
+    -fx-transition: all 0.3s ease-in-out;
+}
+
+.search-field:focused {
+    -fx-background-color: white;
+    -fx-border-color: -fx-primary;
+    -fx-effect: dropshadow(gaussian, rgba(74,144,226,0.2), 5, 0, 0, 0);
+}
+
+/* Table styles - Updated */
+.modern-table {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-min-height: 400px;
+    -fx-pref-height: 600px;
+}
+
+.modern-table .column-header {
+    -fx-background-color: #f8f9fa;
+    -fx-padding: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+    -fx-border-color: transparent transparent #dee2e6 transparent;
+    -fx-font-size: 13px;
+}
+
+.modern-table .table-row-cell {
+    -fx-background-color: white;
+    -fx-border-color: transparent transparent #f1f1f1 transparent;
+    -fx-padding: 5px;
+}
+
+.modern-table .table-row-cell:odd {
+    -fx-background-color: #fcfcfc;
+}
+
+.modern-table .table-row-cell:selected {
+    -fx-background-color: derive(-fx-primary, 90%);
+}
+
+.modern-table .table-row-cell:hover {
+    -fx-background-color: derive(-fx-primary, 95%);
+}
+
+/* Status bar - Updated */
+.status-bar {
+    -fx-background-color: white;
+    -fx-padding: 10 15;
+    -fx-background-radius: 5px;
+    -fx-border-color: #dee2e6;
+    -fx-border-radius: 5px;
+    -fx-margin-top: auto;
+}
+
+.status-text {
+    -fx-text-fill: -fx-secondary;
+    -fx-font-size: 13px;
+}
+
+
+
+/* Adding specific styles for resource management */
+
+
+
+
+.modern-field.text-area {
+    -fx-pref-height: 80px;
+    -fx-max-height: 80px;
+}
+
+.status-text {
+    -fx-padding: 0 10 0 10;
+}
+
+/* Status indicators */
+.status-available {
+    -fx-text-fill: #2ecc71;
+    -fx-font-weight: bold;
+}
+
+.status-low {
+    -fx-text-fill: #f1c40f;
+    -fx-font-weight: bold;
+}
+
+.status-unavailable {
+    -fx-text-fill: #e74c3c;
+    -fx-font-weight: bold;
+}
+
+/* Quantity cell styling */
+.quantity-cell {
+    -fx-alignment: CENTER;
+    -fx-font-weight: bold;
+}
+
+/* Description tooltip */
+.description-tooltip {
+    -fx-background-color: white;
+    -fx-text-fill: #2c3e50;
+    -fx-font-size: 12px;
+    -fx-padding: 10px;
+    -fx-background-radius: 5px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);
+}

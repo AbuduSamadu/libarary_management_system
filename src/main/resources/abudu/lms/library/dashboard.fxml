@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.geometry.Pos?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="abudu.lms.library.controller.DashboardController" >
+    <!-- Navbar -->
+    <top>
+        <HBox alignment="CENTER" styleClass="navbar">
+
+            <TextField fx:id="globalSearchField" promptText="Search resources, users, or transactions..." styleClass="search-field"/>
+            <Label text="Welcome, User" fx:id="usernameLabel" styleClass="welcome-label"/>
+            <Button text="Dark Mode" fx:id="darkModeToggle" onAction="#handleDarkModeToggle" styleClass="dark-mode-toggle"/>
+        </HBox>
+    </top>
+
+    <!-- Sidebar -->
+    <left>
+        <VBox alignment="TOP_CENTER" styleClass="sidebar">
+            <ImageView fx:id="logo" fitWidth="100" preserveRatio="true"/>
+            <Button text="Dashboard" fx:id="sidebarHomeButton" maxWidth="Infinity" styleClass="sidebar-button" onAction="#handleHomeButtonClick"/>
+            <Button text="Books" fx:id="booksButton" maxWidth="Infinity" styleClass="sidebar-button" onAction="#handleBooksButtonClick"/>
+            <Button text="Reports" fx:id="reportsButton" maxWidth="Infinity" styleClass="sidebar-button" onAction="#handleReportsButtonClick"/>
+            <Button text="Settings" fx:id="settingsButton" maxWidth="Infinity" styleClass="sidebar-button" onAction="#handleSettingsButtonClick"/>
+            <Button text="Logout" fx:id="logoutButton" maxWidth="Infinity" styleClass="sidebar-button" onAction="#handleLogoutButtonClick"/>
+        </VBox>
+    </left>
+
+    <!-- Main Content -->
+    <center>
+        <VBox fx:id="mainBoard" styleClass="main-content" spacing="20">
+            <!-- Dashboard Title -->
+            <Label text="Dashboard Overview" styleClass="main-title"/>
+
+            <!-- Dashboard Cards -->
+            <HBox alignment="CENTER" spacing="20">
+                <VBox alignment="CENTER" styleClass="card" spacing="10">
+                    <Label text="Total Books" styleClass="card-title"/>
+                    <Label text="1,250" styleClass="card-value"/>
+                </VBox>
+                <VBox alignment="CENTER" styleClass="card" spacing="10">
+                    <Label text="Total Users" styleClass="card-title"/>
+                    <Label text="543" styleClass="card-value"/>
+                </VBox>
+                <VBox alignment="CENTER" styleClass="card" spacing="10">
+                    <Label text="Issued Books" styleClass="card-title"/>
+                    <Label text="235" styleClass="card-value"/>
+                </VBox>
+                <VBox alignment="CENTER" styleClass="card" spacing="10">
+                    <Label text="Overdue Returns" styleClass="card-title"/>
+                    <Label text="15" styleClass="card-value"/>
+                </VBox>
+            </HBox>
+
+            <!-- Charts Section -->
+            <HBox alignment="CENTER" spacing="30">
+                <PieChart fx:id="resourceChart" styleClass="pie-chart" prefWidth="400"/>
+                <StackPane>
+                    <BarChart fx:id="transactionBarChart" title="Monthly Transactions"
+                              animated="true" styleClass="bar-chart" prefWidth="500">
+                        <xAxis>
+                            <CategoryAxis fx:id="xAxis" label="Month"/>
+                        </xAxis>
+                        <yAxis>
+                            <NumberAxis fx:id="yAxis" label="Transactions"/>
+                        </yAxis>
+                    </BarChart>
+                </StackPane>
+            </HBox>
+        </VBox>
+    </center>
+
+    <!-- Footer -->
+    <bottom>
+        <HBox alignment="CENTER" styleClass="footer">
+            <Label text="© 2024 Library Management System | v1.0" styleClass="footer-label"/>
+        </HBox>
+    </bottom>
+</BorderPane>

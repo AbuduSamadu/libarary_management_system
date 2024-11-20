@@ -1,15 +1,12 @@
 package abudu.lms.library.controller;
 
-import abudu.lms.library.database.BookDataHandler;
 import abudu.lms.library.models.Book;
-import abudu.lms.library.models.BookOperation;
+import abudu.lms.library.repository.BookRepositoryImpl;
 import javafx.fxml.FXML;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextField;
-import javafx.stage.Stage;
+import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
 
-import java.time.LocalDate;
-import java.util.UUID;
+import java.util.List;
 
 public class BookController {
 
@@ -18,69 +15,135 @@ public class BookController {
     @FXML
     private TextField authorField;
     @FXML
+    private TextField isbnField;
+    @FXML
+    private ComboBox<String> categoryComboBox;
+    @FXML
     private TextField publisherField;
     @FXML
-    private DatePicker yearPicker;
+    private TextField quantityField;
+    @FXML
+    private TextArea descriptionArea;
+    @FXML
+    private ComboBox<String> filterCategoryComboBox;
+    @FXML
+    private ComboBox<String> filterStatusComboBox;
+    @FXML
+    private TextField filterPublisherField;
+    @FXML
+    private DatePicker acquisitionDatePicker;
+    @FXML
+    private TextField searchField;
+    @FXML
+    private TableView<Book> resourcesTable;
+    @FXML
+    private TableColumn<Book, Integer> idColumn;
+    @FXML
+    private TableColumn<Book, String> titleColumn;
+    @FXML
+    private TableColumn<Book, String> authorColumn;
+    @FXML
+    private TableColumn<Book, String> isbnColumn;
+    @FXML
+    private TableColumn<Book, String> categoryColumn;
+    @FXML
+    private TableColumn<Book, String> publicationColumn;
+    @FXML
+    private TableColumn<Book, Integer> issueNumberColumn;
+    @FXML
+    private TableColumn<Book, Integer> quantityColumn;
+    @FXML
+    private TableColumn<Book, String> availableColumn;
+    @FXML
+    private TableColumn<Book, String> formatColumn;
+    @FXML
+    private TableColumn<Book, String> actionsColumn;
+    @FXML
+    private Label statusLabel;
+    @FXML
+    private Label totalResourcesLabel;
+    @FXML
+    private Label availableResourcesLabel;
+    @FXML
+    private Label checkedOutLabel;
+    @FXML
+    private VBox resourceBox;
 
-    private final BookDataHandler bookDataHandler;
-    private BookOperation currentOperation;
-    private Book currentBook;
-    private Stage modalStage;
+    private final BookRepositoryImpl bookRepository;
 
     public BookController() {
-        this.bookDataHandler = new BookDataHandler();
-    }
-
-    public void setOperation(BookOperation operation, Book book) {
-        this.currentOperation = operation;
-        this.currentBook = book;
-        if (book != null) {
-            titleField.setText(book.getTitle());
-            authorField.setText(book.getAuthor());
-            publisherField.setText(book.getPublisher());
-            yearPicker.setValue(LocalDate.of(book.getYear(), 1, 1));
-        }
+        this.bookRepository = new BookRepositoryImpl();
     }
 
     @FXML
-    private void handleSave() {
+    private void handleAddResource() {
         String title = titleField.getText();
         String author = authorField.getText();
+        String isbn = isbnField.getText();
+        String category = categoryComboBox.getValue();
         String publisher = publisherField.getText();
-        int year = yearPicker.getValue().getYear();
-        String isbn = UUID.randomUUID().toString(); // Generate a unique ISBN
-        int id = bookDataHandler.generateNewId(); // Implement this method to generate a new ID
-        boolean available = true;
+        int quantity = Integer.parseInt(quantityField.getText());
+        String description = descriptionArea.getText();
 
-        Book book = new Book(id, title, author, publisher, year, isbn, available);
-
-        switch (currentOperation) {
-            case ADD:
-                bookDataHandler.addBook(book);
-                break;
-            case UPDATE:
-                book.setId(currentBook.getId());
-                bookDataHandler.updateBook(book);
-                break;
-            case DELETE:
-                bookDataHandler.deleteBook(currentBook.getId());
-                break;
-            case BORROW:
-                // Implement borrow logic
-                break;
-            case RETURN:
-                // Implement return logic
-                break;
-        }
-        modalStage.close();
+        Book book = new Book(0, title, author, publisher, 2023, isbn, true, category, quantity, description);
+        bookRepository.addBook(book);
+        refreshTable();
     }
 
     @FXML
-    private void handleCancel() {
-        modalStage.close();
+    private void handleClearForm() {
+        titleField.clear();
+        authorField.clear();
+        isbnField.clear();
+        categoryComboBox.setValue(null);
+        publisherField.clear();
+        quantityField.clear();
+        descriptionArea.clear();
     }
 
-    public void setModalStage(Stage modalStage) {
-        this.modalStage = modalStage;
+    @FXML
+    private void handleApplyFilters() {
+        // Implement filter logic
+    }
+
+    @FXML
+    private void handleExport() {
+        // Implement export logic
+    }
+
+    @FXML
+    private void handleImport() {
+        // Implement import logic
+    }
+
+    @FXML
+    private void handleGenerateReport() {
+        // Implement generate report logic
+    }
+
+    @FXML
+    private void handleRefresh() {
+        refreshTable();
+    }
+
+    @FXML
+    private void handleHomeButtonClicked() {
+        // Implement home button logic
+    }
+
+    private void refreshTable() {
+        List<Book> books = bookRepository.getAllBooks();
+        resourcesTable.getItems().setAll(books);
+        updateStatusLabels(books);
+    }
+
+    private void updateStatusLabels(List<Book> books) {
+        int totalResources = books.size();
+        long availableResources = books.stream().filter(Book::isAvailable).count();
+        long checkedOutResources = totalResources - availableResources;
+
+        totalResourcesLabel.setText("Total Resources: " + totalResources);
+        availableResourcesLabel.setText(" | Available: " + availableResources);
+        checkedOutLabel.setText(" | Checked Out: " + checkedOutResources);
     }
 }
