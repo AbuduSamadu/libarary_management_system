@@ -11,8 +11,9 @@ public class Book {
     private String category;
     private int quantity;
     private String description;
+    private long userId;
 
-    public Book(int id, String title, String author, String publisher, int year, String isbn, boolean available, String category, int quantity, String description) {
+    public Book(int id, String title, String author, String publisher, int year, String isbn, boolean available, String category, int quantity, String description, long userId) {
         this.id = id;
         this.title = title;
         this.author = author;
@@ -23,6 +24,7 @@ public class Book {
         this.category = category;
         this.quantity = quantity;
         this.description = description;
+        this.userId = userId;
     }
 
     // Getters and setters
@@ -105,5 +107,14 @@ public class Book {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public long getUserId() {
+        return userId;
+
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 }

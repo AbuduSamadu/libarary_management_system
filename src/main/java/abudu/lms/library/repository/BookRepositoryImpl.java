@@ -18,7 +18,30 @@ public class BookRepositoryImpl implements BookRepository {
 
     @Override
     public void addBook(Book book) {
-        String query = "INSERT INTO books (id, title, author, publisher, year, isbn, available) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO books (id,title, author, publisher, year, isbn, available, category, quantity, description, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
+        try (Connection conn = dbHandler.getConnection();
+
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, book.getId());
+            stmt.setString(2, book.getTitle());
+            stmt.setString(3, book.getAuthor());
+            stmt.setString(4, book.getPublisher());
+            stmt.setInt(5, book.getYear());
+            stmt.setString(6, book.getIsbn());
+            stmt.setBoolean(7, book.isAvailable());
+            stmt.setString(8, book.getCategory());
+            stmt.setInt(9, book.getQuantity());
+            stmt.setString(10, book.getDescription());
+            stmt.setLong(11, book.getUserId()); // Assuming user_id is a long
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void updateBook(Book book) {
+        String query = "UPDATE books SET title = ?, author = ?, publisher = ?, year = ?, isbn = ?, available = ? WHERE id = ?";
         try (Connection connection = dbHandler.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, book.getId());
@@ -28,25 +51,11 @@ public class BookRepositoryImpl implements BookRepository {
             statement.setInt(5, book.getYear());
             statement.setString(6, book.getIsbn());
             statement.setBoolean(7, book.isAvailable());
+            statement.setString(8, book.getCategory());
+            statement.setInt(9, book.getQuantity());
+            statement.setString(10, book.getDescription());
+            statement.setLong(11, book.getUserId()); // Assuming user_id is a long
 
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            Logger.getLogger(BookRepositoryImpl.class.getName()).log(Level.SEVERE, "An error occurred while adding a book to the database", e);
-        }
-    }
-
-    @Override
-    public void updateBook(Book book) {
-        String query = "UPDATE books SET title = ?, author = ?, publisher = ?, year = ?, isbn = ?, available = ? WHERE id = ?";
-        try (Connection connection = dbHandler.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(1, book.getTitle());
-            statement.setString(2, book.getAuthor());
-            statement.setString(3, book.getPublisher());
-            statement.setInt(4, book.getYear());
-            statement.setString(5, book.getIsbn());
-            statement.setBoolean(6, book.isAvailable());
-            statement.setInt(7, book.getId());
 
 
             statement.executeUpdate();
@@ -90,7 +99,8 @@ public class BookRepositoryImpl implements BookRepository {
                         resultSet.getBoolean("available"),
                         resultSet.getString("category"),
                         resultSet.getInt("quantity"),
-                        resultSet.getString("description")
+                        resultSet.getString("description"),
+                        resultSet.getLong("user_id") // Assuming user_id is a long
 
                 );
             }
@@ -118,7 +128,8 @@ public class BookRepositoryImpl implements BookRepository {
                         resultSet.getBoolean("available"),
                         resultSet.getString("category"),
                         resultSet.getInt("quantity"),
-                        resultSet.getString("description")
+                        resultSet.getString("description"),
+                        resultSet.getLong("user_id") // Assuming user_id is a long
                 ));
             }
         } catch (SQLException e) {

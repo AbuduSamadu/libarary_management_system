@@ -59,7 +59,6 @@ public class UserLoginController {
                 User user = userDataHandler.getUserByEmail(email);
                 if (user != null && BCrypt.checkpw(password, user.getPassword())) {
                     updateMessage("Login successful!");
-                    UserSession.getInstance().setUsername(user.getName());
                     Platform.runLater(() -> loadDashboard());
                 } else {
                     updateMessage("Invalid email or password.");

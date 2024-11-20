@@ -1,28 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.geometry.Pos?>
+
 <?import javafx.scene.chart.BarChart?>
 <?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.chart.PieChart?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
+
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="abudu.lms.library.controller.DashboardController" >
+<BorderPane fx:id="dashboard"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="abudu.lms.library.controller.DashboardController"
+            stylesheets="@styles/styles.css" >
     <!-- Navbar -->
     <top>
         <HBox alignment="CENTER" styleClass="navbar">
-
-            <TextField fx:id="globalSearchField" promptText="Search resources, users, or transactions..." styleClass="search-field"/>
             <Label text="Welcome, User" fx:id="usernameLabel" styleClass="welcome-label"/>
-            <Button text="Dark Mode" fx:id="darkModeToggle" onAction="#handleDarkModeToggle" styleClass="dark-mode-toggle"/>
         </HBox>
     </top>
 
@@ -69,7 +68,7 @@
                 <PieChart fx:id="resourceChart" styleClass="pie-chart" prefWidth="400"/>
                 <StackPane>
                     <BarChart fx:id="transactionBarChart" title="Monthly Transactions"
-                              animated="true" styleClass="bar-chart" prefWidth="500">
+                              styleClass="bar-chart" prefWidth="500">
                         <xAxis>
                             <CategoryAxis fx:id="xAxis" label="Month"/>
                         </xAxis>

@@ -1,8 +1,10 @@
 package abudu.lms.library.utils;
 
+import abudu.lms.library.models.User;
+
 public class UserSession {
     private static UserSession instance;
-    private String username;
+    private User user;
 
     private UserSession() {}
 
@@ -13,11 +15,11 @@ public class UserSession {
         return instance;
     }
 
-    public String getUsername() {
-        return username;
+    public User getUser() {
+        return user;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUser(User user) {
+        this.user = user;
     }
 }

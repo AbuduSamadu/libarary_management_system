@@ -4,9 +4,15 @@ import abudu.lms.library.utils.UserSession;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -17,6 +23,12 @@ import java.util.logging.Logger;
 
 public class DashboardController {
 
+    public PieChart resourceChart;
+    public BarChart transactionBarChart;
+    public Button reportsButton;
+    public CategoryAxis xAxis;
+    public NumberAxis yAxis;
+    public BorderPane dashboard;
     @FXML
     private Label usernameLabel;
 
@@ -76,9 +88,14 @@ public class DashboardController {
     private void handleBooksButtonClick() {
         mainBoard.getChildren().clear();
         try {
+            Stage stage = (Stage) dashboard.getScene().getWindow();
+            double height = stage.getHeight();
+            double width = stage.getWidth();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/abudu/lms/library/book.fxml"));
-            VBox bookView = loader.load();
-            mainBoard.getChildren().add(bookView);
+            Parent root = loader.load();
+            Scene scene = new Scene(root,width,height);
+            stage.setScene(scene);
+            stage.show();
         } catch (IOException e) {
             Logger.getLogger(DashboardController.class.getName()).log(Level.SEVERE, "Error loading book view", e);
         }
@@ -105,7 +122,7 @@ public class DashboardController {
     @FXML
     private void handleLogoutButtonClick(ActionEvent actionEvent) {
         if ("Logout".equals(logoutButton.getText())) {
-            UserSession.getInstance().setUsername(null);
+            UserSession.getInstance().getUser().setName(null);
             setUsernameLabel("Guest");
             setLogoutButtonText("Login");
         } else {
