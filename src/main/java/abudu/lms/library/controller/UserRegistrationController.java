@@ -116,7 +116,7 @@ public class UserRegistrationController {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/abudu/lms/library/login.fxml"));
             Stage stage = (Stage) firstNameField.getScene().getWindow();
-            stage.setScene(new Scene(root, 600, 400));
+            stage.setScene(new Scene(root, 400, 600));
         } catch (IOException e) {
             Logger.getLogger(UserRegistrationController.class.getName()).log(Level.SEVERE, "An error occurred while trying to load the login screen", e);
             showAlert(Alert.AlertType.ERROR, "Error", "Unable to load login screen.");

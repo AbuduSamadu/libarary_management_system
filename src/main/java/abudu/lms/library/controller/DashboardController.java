@@ -122,7 +122,7 @@ public class DashboardController {
     @FXML
     private void handleLogoutButtonClick(ActionEvent actionEvent) {
         if ("Logout".equals(logoutButton.getText())) {
-            UserSession.getInstance().getUser().setName(null);
+            UserSession.getInstance().getCurrentUser().setName(null);
             setUsernameLabel("Guest");
             setLogoutButtonText("Login");
         } else {
@@ -137,14 +137,17 @@ public class DashboardController {
             dialogStage.setTitle("Login");
             dialogStage.initModality(Modality.WINDOW_MODAL);
             dialogStage.initOwner(logoutButton.getScene().getWindow());
+
+            // Set the desired width and height
+            dialogStage.setWidth(400);
+            dialogStage.setHeight(300);
+
             Scene scene = new Scene(loader.load());
             dialogStage.setScene(scene);
 
             UserLoginController controller = loader.getController();
 
-
             dialogStage.showAndWait();
-
 
         } catch (IOException e) {
             Logger.getLogger(DashboardController.class.getName()).log(Level.SEVERE, "Error loading login dialog", e);

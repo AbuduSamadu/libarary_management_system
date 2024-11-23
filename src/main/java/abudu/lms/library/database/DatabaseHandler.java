@@ -1,14 +1,17 @@
 package abudu.lms.library.database;
 
+import io.github.cdimascio.dotenv.Dotenv;
+
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class DatabaseHandler {
     private static final Logger LOGGER = Logger.getLogger(DatabaseHandler.class.getName());
-    private static final String URL = "jdbc:postgresql://localhost:5432/library";
-    private static final String USER = "postgres";
-    private static final String PASSWORD = "Abudu?0248";
+    private static final Dotenv dotenv = Dotenv.load();
+    private static final String URL = dotenv.get("DB_URL");
+    private static final String USER = dotenv.get("DB_USER");
+    private static final String PASSWORD = dotenv.get("DB_PASSWORD");
 
     private Connection connection;
 

@@ -2,7 +2,6 @@ package abudu.lms.library.controller;
 
 import abudu.lms.library.models.Book;
 import abudu.lms.library.repository.BookRepositoryImpl;
-import abudu.lms.library.utils.ISBNGenerator;
 import abudu.lms.library.utils.UserSession;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -28,6 +27,7 @@ import java.util.logging.Logger;
 public class BookController {
 
     public Button homeButton;
+    public TableView journalTable;
     @FXML
     private TextField titleField;
     @FXML
@@ -99,18 +99,23 @@ public class BookController {
     @FXML
     private void handleAddResource() {
         // Check if the user is authenticated
-        if (UserSession.getInstance().getUser().getName() == null) {
-            showAlert(Alert.AlertType.ERROR, "Authentication Required", "You must be logged in to add a book.");
-            return;
-        }
+//        if (UserSession.getInstance().getCurrentUser() == null) {
+//            showAlert(Alert.AlertType.ERROR, "Authentication Required", "You must be logged in to add a book.");
+//            return;
+//        }
 
         String title = titleField.getText();
         String author = authorField.getText();
-        String isbn = ISBNGenerator.generateISBN(); // Generate ISBN
         String category = categoryComboBox.getValue();
         String publisher = publisherField.getText();
         int year = yearPicker.getValue().getYear(); // Get the year from DatePicker
         int quantity;
+        String isbnStr = isbnField.getText();
+        if (!isbnStr.matches("\\d{13}")) {
+            showAlert(Alert.AlertType.ERROR, "Invalid ISBN", "ISBN must be exactly 13 digits.");
+            return;
+        }
+        long isbn = Long.parseLong(isbnStr);
         try {
             quantity = Integer.parseInt(quantityField.getText());
         } catch (NumberFormatException e) {
@@ -118,14 +123,14 @@ public class BookController {
             return;
         }
         String description = descriptionArea.getText();
-        long userId = UserSession.getInstance().getUser().getId();// Get the logged in user id
-        if (userId <= 0) {
-            System.out.println(" userId" + userId);
-            showAlert(Alert.AlertType.ERROR, "Invalid User", "The logged in user is invalid.");
-            return;
-        }
+//        long userId = UserSession.getInstance().getCurrentUser().getId();// Get the logged in user id
+//        if (userId <= 0) {
+//            System.out.println(" userId" + userId);
+//            showAlert(Alert.AlertType.ERROR, "Invalid User", "The logged in user is invalid.");
+//            return;
+//        }
 
-        Book book = new Book(0, title, author, publisher, year, isbn, true, category, quantity, description, 15);
+        Book book = new Book(0, title, author, publisher, year, (int) isbn, true, category, quantity, description, 15);
         try {
             bookRepository.addBook(book);
             showAlert(Alert.AlertType.INFORMATION, "Success", "Book added successfully.");
@@ -146,6 +151,7 @@ public class BookController {
     @FXML
     public void initialize() {
         categoryComboBox.setItems(FXCollections.observableArrayList("Books", "Magazine", "Journal"));
+        handleFetchBook();
     }
 
     @FXML
@@ -216,42 +222,20 @@ public class BookController {
     }
     @FXML
     private void handleFetchBook() {
-        java.awt.Label bookIdField = null;
-        String bookIdStr = bookIdField.getText(); // Assuming you have a TextField to input the book ID
-        int bookId;
         try {
-            bookId = Integer.parseInt(bookIdStr);
-        } catch (NumberFormatException e) {
-            showAlert(Alert.AlertType.ERROR, "Invalid Input", "Book ID must be a valid number.");
-            return;
-        }
-
-        try {
-            Book book = bookRepository.getBookById(bookId);
-            if (book != null) {
-                displayBookDetails(book);
+            List<Book> books = bookRepository.getAllBooks();
+            if (books != null && !books.isEmpty()) {
+                displayBooks(books);
             } else {
-                showAlert(Alert.AlertType.INFORMATION, "Not Found", "No book found with the given ID.");
+                showAlert(Alert.AlertType.INFORMATION, "Not Found", "No books found in the database.");
             }
         } catch (Exception e) {
             showAlert(Alert.AlertType.ERROR, "Error", "Failed to fetch book details.");
         }
     }
 
-    private void displayBookDetails(Book book) {
-        // Display the book details in the UI
-        titleField.setText(book.getTitle());
-        authorField.setText(book.getAuthor());
-        isbnField.setText(book.getIsbn());
-        yearPicker.setValue(LocalDate.of(book.getYear(), 1, 1));
-        categoryComboBox.setValue(book.getCategory());
-        publisherField.setText(book.getPublisher());
-        quantityField.setText(String.valueOf(book.getQuantity()));
-        descriptionArea.setText(book.getDescription());
-
-        // Update the table fields
+    private void displayBooks(List<Book> books) {
         resourcesTable.getItems().clear();
-        resourcesTable.getItems().add(book);
+        resourcesTable.getItems().addAll(books);
     }
-
 }

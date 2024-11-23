@@ -100,9 +100,9 @@ public class UserLoginController {
     @FXML
     public void showRegister() {
         try {
-            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/abudu/lms/library/dashboard.fxml")));
+            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/abudu/lms/library/register.fxml")));
             Stage stage = (Stage) emailField.getScene().getWindow();
-            stage.setScene(new Scene(root, 800, 600));
+            stage.setScene(new Scene(root, 400, 600));
         } catch (IOException e) {
             Logger.getLogger(UserLoginController.class.getName()).log(Level.SEVERE, "An error occurred while trying to load the registration screen", e);
         }

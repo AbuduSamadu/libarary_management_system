@@ -14,7 +14,8 @@ public class Dashboard extends Application {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/abudu/lms/library/dashboard.fxml"));
             Scene scene = new Scene(loader.load());
-            String username = UserSession.getInstance().getUser() != null ? UserSession.getInstance().getUser().getName() : null;
+            UserSession userSession = UserSession.getInstance();
+            String username = (userSession.getCurrentUser() != null) ? userSession.getCurrentUser().getName() : null;
 
             DashboardController controller = loader.getController();
             if (username != null) {

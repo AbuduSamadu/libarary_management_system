@@ -15,6 +15,7 @@ module abudu.lms.library {
     requires java.sql;
     requires java.desktop;
     requires jbcrypt;
+    requires java.dotenv;
 
     opens abudu.lms.library to javafx.fxml;
     opens abudu.lms.library.controller to javafx.fxml;

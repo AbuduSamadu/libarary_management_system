@@ -133,6 +133,11 @@
           <artifactId>ikonli-fontawesome5-pack</artifactId>
           <version>12.3.1</version>
       </dependency>
+      <dependency>
+          <groupId>io.github.cdimascio</groupId>
+          <artifactId>java-dotenv</artifactId>
+          <version>5.2.2</version>
+      </dependency>
 
 
       <dependency>
@@ -150,7 +155,6 @@
               <artifactId>javafx-graphics</artifactId>
               <version> 17.0.6</version>
           </dependency>
-
 
   </dependencies>
 

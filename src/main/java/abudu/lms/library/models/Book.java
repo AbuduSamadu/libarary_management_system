@@ -6,14 +6,14 @@ public class Book {
     private String author;
     private String publisher;
     private int year;
-    private String isbn;
+    private int isbn;
     private boolean available;
     private String category;
     private int quantity;
     private String description;
     private long userId;
 
-    public Book(int id, String title, String author, String publisher, int year, String isbn, boolean available, String category, int quantity, String description, long userId) {
+    public Book(int id, String title, String author, String publisher, int year, int isbn, boolean available, String category, int quantity, String description, long userId) {
         this.id = id;
         this.title = title;
         this.author = author;
@@ -69,11 +69,11 @@ public class Book {
         this.year = year;
     }
 
-    public String getIsbn() {
+    public int getIsbn() {
         return isbn;
     }
 
-    public void setIsbn(String isbn) {
+    public void setIsbn(int isbn) {
         this.isbn = isbn;
     }
 

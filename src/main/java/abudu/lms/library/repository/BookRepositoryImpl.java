@@ -27,7 +27,7 @@ public class BookRepositoryImpl implements BookRepository {
             stmt.setString(3, book.getAuthor());
             stmt.setString(4, book.getPublisher());
             stmt.setInt(5, book.getYear());
-            stmt.setString(6, book.getIsbn());
+            stmt.setInt(6, book.getIsbn());
             stmt.setBoolean(7, book.isAvailable());
             stmt.setString(8, book.getCategory());
             stmt.setInt(9, book.getQuantity());
@@ -49,7 +49,7 @@ public class BookRepositoryImpl implements BookRepository {
             statement.setString(3, book.getAuthor());
             statement.setString(4, book.getPublisher());
             statement.setInt(5, book.getYear());
-            statement.setString(6, book.getIsbn());
+            statement.setInt(6, book.getIsbn());
             statement.setBoolean(7, book.isAvailable());
             statement.setString(8, book.getCategory());
             statement.setInt(9, book.getQuantity());
@@ -95,7 +95,7 @@ public class BookRepositoryImpl implements BookRepository {
                         resultSet.getString("author"),
                         resultSet.getString("publisher"),
                         resultSet.getInt("year"),
-                        resultSet.getString("isbn"),
+                        resultSet.getInt("isbn"),
                         resultSet.getBoolean("available"),
                         resultSet.getString("category"),
                         resultSet.getInt("quantity"),
@@ -124,7 +124,7 @@ public class BookRepositoryImpl implements BookRepository {
                         resultSet.getString("author"),
                         resultSet.getString("publisher"),
                         resultSet.getInt("year"),
-                        resultSet.getString("isbn"),
+                        resultSet.getInt("isbn"),
                         resultSet.getBoolean("available"),
                         resultSet.getString("category"),
                         resultSet.getInt("quantity"),

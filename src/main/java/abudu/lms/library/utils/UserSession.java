@@ -4,9 +4,11 @@ import abudu.lms.library.models.User;
 
 public class UserSession {
     private static UserSession instance;
-    private User user;
+    private User currentUser;
 
-    private UserSession() {}
+    private UserSession() {
+        // Private constructor to prevent instantiation
+    }
 
     public static UserSession getInstance() {
         if (instance == null) {
@@ -15,11 +17,15 @@ public class UserSession {
         return instance;
     }
 
-    public User getUser() {
-        return user;
+    public void setCurrentUser(User user) {
+        this.currentUser = user;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public User getCurrentUser() {
+        return currentUser;
+    }
+
+    public void clearSession() {
+        currentUser = null;
     }
 }
