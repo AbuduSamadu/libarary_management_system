@@ -96,7 +96,7 @@
                     <TableColumn fx:id="categoryColumn" text="Category" prefWidth="100"/>
                     <TableColumn fx:id="quantityColumn" text="Quantity" />
                     <TableColumn fx:id="descriptionColumn" text="Description" prefWidth="200"/>
-                    <TableColumn fx:id="availableColumn" text="Status" prefWidth="100"/>
+                    <TableColumn fx:id="availableColumn" text="Available" prefWidth="100"/>
                     <TableColumn fx:id="actionsColumn" text="Actions" prefWidth="150"/>
                 </columns>
             </TableView>
