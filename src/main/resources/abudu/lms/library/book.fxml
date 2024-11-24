@@ -89,13 +89,14 @@
             <TableView fx:id="resourcesTable" VBox.vgrow="ALWAYS" styleClass="modern-table">
                 <columns>
                     <TableColumn fx:id="idColumn" text="ID" prefWidth="50"/>
-                    <TableColumn fx:id="titleColumn" text="Title" prefWidth="200"/>
+                    <TableColumn fx:id="titleColumn" text="Title" prefWidth="100"/>
                     <TableColumn fx:id="authorColumn" text="Author" prefWidth="150" />
                     <TableColumn fx:id="isbnColumn" text="ISBN" prefWidth="120" />
+                    <TableColumn fx:id="publicationColumn" text="Publication Date" prefWidth="100" />
                     <TableColumn fx:id="categoryColumn" text="Category" prefWidth="100"/>
-                    <TableColumn fx:id="publicationColumn" text="Publication Date" prefWidth="120" />
                     <TableColumn fx:id="quantityColumn" text="Quantity" />
-                    <TableColumn fx:id="availableColumn" text="Status"/>
+                    <TableColumn fx:id="descriptionColumn" text="Description" prefWidth="200"/>
+                    <TableColumn fx:id="availableColumn" text="Status" prefWidth="100"/>
                     <TableColumn fx:id="actionsColumn" text="Actions" prefWidth="150"/>
                 </columns>
             </TableView>

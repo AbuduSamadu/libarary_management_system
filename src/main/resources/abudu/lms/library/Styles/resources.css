@@ -349,3 +349,14 @@
     -fx-background-radius: 5px;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);
 }
+
+/* resources.css */
+.button-reserve {
+    -fx-background-color: #FFC107; /* Amber color */
+    -fx-text-fill: white;
+}
+
+.button-borrow {
+    -fx-background-color: #28a745; /* Green color */
+    -fx-text-fill: white;
+}

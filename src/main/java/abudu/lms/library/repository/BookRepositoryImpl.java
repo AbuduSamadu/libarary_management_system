@@ -18,27 +18,24 @@ public class BookRepositoryImpl implements BookRepository {
 
     @Override
     public void addBook(Book book) {
-        String sql = "INSERT INTO books (id,title, author, publisher, year, isbn, available, category, quantity, description, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
+        String sql = "INSERT INTO books (title, author, publisher, year, isbn, available, category, quantity, description, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = dbHandler.getConnection();
-
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, book.getId());
-            stmt.setString(2, book.getTitle());
-            stmt.setString(3, book.getAuthor());
-            stmt.setString(4, book.getPublisher());
-            stmt.setInt(5, book.getYear());
-            stmt.setInt(6, book.getIsbn());
-            stmt.setBoolean(7, book.isAvailable());
-            stmt.setString(8, book.getCategory());
-            stmt.setInt(9, book.getQuantity());
-            stmt.setString(10, book.getDescription());
-            stmt.setLong(11, book.getUserId()); // Assuming user_id is a long
-            stmt.executeUpdate();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, book.getTitle());
+            pstmt.setString(2, book.getAuthor());
+            pstmt.setString(3, book.getPublisher());
+            pstmt.setInt(4, book.getYear());
+            pstmt.setInt(5, book.getIsbn());
+            pstmt.setBoolean(6, book.isAvailable());
+            pstmt.setString(7, book.getCategory());
+            pstmt.setInt(8, book.getQuantity());
+            pstmt.setString(9, book.getDescription());
+            pstmt.setLong(10, book.getUserId());
+            pstmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
-
     @Override
     public void updateBook(Book book) {
         String query = "UPDATE books SET title = ?, author = ?, publisher = ?, year = ?, isbn = ?, available = ? WHERE id = ?";

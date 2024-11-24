@@ -1,120 +1,81 @@
 package abudu.lms.library.models;
 
+import javafx.beans.property.*;
+import javafx.beans.value.ObservableValue;
+
 public class Book {
-    private int id;
-    private String title;
-    private String author;
-    private String publisher;
-    private int year;
-    private int isbn;
-    private boolean available;
-    private String category;
-    private int quantity;
-    private String description;
-    private long userId;
+    private final IntegerProperty id;
+    private final StringProperty title;
+    private final StringProperty author;
+    private final StringProperty publisher;
+    private final IntegerProperty year;
+    private final IntegerProperty isbn;
+    private final BooleanProperty available;
+    private final StringProperty category;
+    private final IntegerProperty quantity;
+    private final StringProperty description;
+    private final LongProperty userId;
 
     public Book(int id, String title, String author, String publisher, int year, int isbn, boolean available, String category, int quantity, String description, long userId) {
-        this.id = id;
-        this.title = title;
-        this.author = author;
-        this.publisher = publisher;
-        this.year = year;
-        this.isbn = isbn;
-        this.available = available;
-        this.category = category;
-        this.quantity = quantity;
-        this.description = description;
-        this.userId = userId;
+        this.id = new SimpleIntegerProperty(id);
+        this.title = new SimpleStringProperty(title);
+        this.author = new SimpleStringProperty(author);
+        this.publisher = new SimpleStringProperty(publisher);
+        this.year = new SimpleIntegerProperty(year);
+        this.isbn = new SimpleIntegerProperty(isbn);
+        this.available = new SimpleBooleanProperty(available);
+        this.category = new SimpleStringProperty(category);
+        this.quantity = new SimpleIntegerProperty(quantity);
+        this.description = new SimpleStringProperty(description);
+        this.userId = new SimpleLongProperty(userId);
     }
 
-    // Getters and setters
+    // Getters and setters for properties
+    public int getId() { return id.get(); }
+    public IntegerProperty idProperty() { return id; }
+    public void setId(int id) { this.id.set(id); }
 
-    public int getId() {
-        return id;
-    }
+    public String getTitle() { return title.get(); }
+    public StringProperty titleProperty() { return title; }
+    public void setTitle(String title) { this.title.set(title); }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+    public String getAuthor() { return author.get(); }
+    public StringProperty authorProperty() { return author; }
+    public void setAuthor(String author) { this.author.set(author); }
 
-    public String getTitle() {
-        return title;
-    }
+    public String getPublisher() { return publisher.get(); }
+    public StringProperty publisherProperty() { return publisher; }
+    public void setPublisher(String publisher) { this.publisher.set(publisher); }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+    public int getYear() { return year.get(); }
+    public IntegerProperty yearProperty() { return year; }
+    public void setYear(int year) { this.year.set(year); }
 
-    public String getAuthor() {
-        return author;
-    }
+    public int getIsbn() { return isbn.get(); }
+    public IntegerProperty isbnProperty() { return isbn; }
+    public void setIsbn(int isbn) { this.isbn.set(isbn); }
 
-    public void setAuthor(String author) {
-        this.author = author;
-    }
+    public boolean isAvailable() { return available.get(); }
+    public BooleanProperty availableProperty() { return available; }
+    public void setAvailable(boolean available) { this.available.set(available); }
 
-    public String getPublisher() {
-        return publisher;
-    }
+    public String getCategory() { return category.get(); }
+    public StringProperty categoryProperty() { return category; }
+    public void setCategory(String category) { this.category.set(category); }
 
-    public void setPublisher(String publisher) {
-        this.publisher = publisher;
-    }
+    public int getQuantity() { return quantity.get(); }
+    public IntegerProperty quantityProperty() { return quantity; }
+    public void setQuantity(int quantity) { this.quantity.set(quantity); }
 
-    public int getYear() {
-        return year;
-    }
+    public String getDescription() { return description.get(); }
+    public StringProperty descriptionProperty() { return description; }
+    public void setDescription(String description) { this.description.set(description); }
 
-    public void setYear(int year) {
-        this.year = year;
-    }
+    public long getUserId() { return userId.get(); }
+    public LongProperty userIdProperty() { return userId; }
+    public void setUserId(long userId) { this.userId.set(userId); }
 
-    public int getIsbn() {
-        return isbn;
-    }
-
-    public void setIsbn(int isbn) {
-        this.isbn = isbn;
-    }
-
-    public boolean isAvailable() {
-        return available;
-    }
-
-    public void setAvailable(boolean available) {
-        this.available = available;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public long getUserId() {
-        return userId;
-
-    }
-
-    public void setUserId(long userId) {
-        this.userId = userId;
+    public ObservableValue<String> actionsProperty() {
+        return new SimpleStringProperty("Edit | Delete");
     }
 }

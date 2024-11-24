@@ -29,6 +29,16 @@ public class DashboardController {
     public CategoryAxis xAxis;
     public NumberAxis yAxis;
     public BorderPane dashboard;
+
+    @FXML
+    private Label totalBooksLabel;
+    @FXML
+    private Label totalUsersLabel;
+    @FXML
+    private Label issuedBooksLabel;
+    @FXML
+    private Label overdueReturnsLabel;
+
     @FXML
     private Label usernameLabel;
 

@@ -4,6 +4,7 @@ import abudu.lms.library.models.Book;
 import abudu.lms.library.repository.BookRepositoryImpl;
 import abudu.lms.library.utils.UserSession;
 import javafx.collections.FXCollections;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -13,16 +14,24 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+
 
 public class BookController {
 
@@ -67,15 +76,15 @@ public class BookController {
     @FXML
     private TableColumn<Book, String> publicationColumn;
     @FXML
-    private TableColumn<Book, Integer> issueNumberColumn;
-    @FXML
     private TableColumn<Book, Integer> quantityColumn;
+    @FXML
+    private TableColumn<Book, String> descriptionColumn;
     @FXML
     private TableColumn<Book, String> availableColumn;
     @FXML
-    private TableColumn<Book, String> formatColumn;
-    @FXML
     private TableColumn<Book, String> actionsColumn;
+    @FXML
+    private TableColumn<Book, String> formatColumn;
     @FXML
     private Label statusLabel;
     @FXML
@@ -149,9 +158,75 @@ public class BookController {
     }
 
     @FXML
-    public void initialize() {
+    private void initialize() {
         categoryComboBox.setItems(FXCollections.observableArrayList("Books", "Magazine", "Journal"));
         handleFetchBook();
+
+        idColumn.setCellValueFactory(cellData -> cellData.getValue().idProperty().asObject());
+        titleColumn.setCellValueFactory(cellData -> cellData.getValue().titleProperty());
+        authorColumn.setCellValueFactory(cellData -> cellData.getValue().authorProperty());
+        isbnColumn.setCellValueFactory(cellData -> cellData.getValue().isbnProperty().asObject().asString());
+        publicationColumn.setCellValueFactory(cellData -> cellData.getValue().publisherProperty());
+        categoryColumn.setCellValueFactory(cellData -> cellData.getValue().categoryProperty());
+        quantityColumn.setCellValueFactory(cellData -> cellData.getValue().quantityProperty().asObject());
+        descriptionColumn.setCellValueFactory(cellData -> cellData.getValue().descriptionProperty());
+        availableColumn.setCellValueFactory(cellData -> cellData.getValue().availableProperty().asObject().asString());
+        actionsColumn.setCellValueFactory(cellData -> cellData.getValue().actionsProperty());
+
+        actionsColumn.setCellFactory(col -> new TableCell<Book, String>() {
+            private final Button reserveButton = new Button("Reserve");
+            private final Button borrowButton = new Button("Borrow");
+
+            {
+                reserveButton.getStyleClass().add("button-reserve");
+                borrowButton.getStyleClass().add("button-borrow");
+
+                reserveButton.setOnAction(event -> {
+                    Book book = getTableView().getItems().get(getIndex());
+                    // Handle reserve action
+                });
+
+                borrowButton.setOnAction(event -> {
+                    Book book = getTableView().getItems().get(getIndex());
+                    // Handle borrow action
+                });
+            }
+
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    HBox buttons = new HBox(10, reserveButton, borrowButton);
+                    setGraphic(buttons);
+                }
+            }
+        });
+
+
+        resourcesTable.setRowFactory(tv -> {
+            TableRow<Book> row = new TableRow<>();
+            row.setPrefHeight(40); // Adjust the height as needed
+            return row;
+        });
+
+
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> filterBooks(newValue));
+    }
+    private void filterBooks(String query) {
+        List<Book> books = bookRepository.getAllBooks();
+        if (query == null || query.isEmpty()) {
+            resourcesTable.getItems().setAll(books);
+        } else {
+            List<Book> filteredBooks = books.stream()
+                    .filter(book -> book.getTitle().toLowerCase().contains(query.toLowerCase()) ||
+                            book.getAuthor().toLowerCase().contains(query.toLowerCase()) ||
+                            String.valueOf(book.getIsbn()).contains(query))
+                    .collect(Collectors.toList());
+            resourcesTable.getItems().setAll(filteredBooks);
+        }
+        updateStatusLabels(resourcesTable.getItems());
     }
 
     @FXML
@@ -172,8 +247,88 @@ public class BookController {
 
     @FXML
     private void handleExport() {
-        // Implement export logic
+        List<Book> books = bookRepository.getAllBooks();
+        if (books.isEmpty()) {
+            showAlert(Alert.AlertType.INFORMATION, "No Data", "No books available to export.");
+            return;
+        }
+
+        ChoiceDialog<String> dialog = new ChoiceDialog<>("Excel", "Excel", "PDF", "Image");
+        dialog.setTitle("Export Format");
+        dialog.setHeaderText("Select Export Format");
+        dialog.setContentText("Choose format:");
+
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(format -> {
+            switch (format) {
+                case "Excel":
+                    exportToExcel(books);
+                    break;
+                case "PDF":
+                    exportToPDF(books);
+                    break;
+                case "Image":
+                    exportToImage(books);
+                    break;
+            }
+        });
     }
+
+    private void exportToPDF(List<Book> books) {
+    }
+
+    private void exportToExcel(List<Book> books) {
+    }
+
+
+    private void exportToImage(List<Book> books) {
+        TableView<Book> tableView = new TableView<>();
+        tableView.getItems().setAll(books);
+
+        // Add columns to the tableView
+        TableColumn<Book, Integer> idColumn = new TableColumn<>("ID");
+        idColumn.setCellValueFactory(cellData -> cellData.getValue().idProperty().asObject());
+
+        TableColumn<Book, String> titleColumn = new TableColumn<>("Title");
+        titleColumn.setCellValueFactory(cellData -> cellData.getValue().titleProperty());
+
+        TableColumn<Book, String> authorColumn = new TableColumn<>("Author");
+        authorColumn.setCellValueFactory(cellData -> cellData.getValue().authorProperty());
+
+        TableColumn<Book, String> isbnColumn = new TableColumn<>("ISBN");
+        isbnColumn.setCellValueFactory(cellData -> cellData.getValue().isbnProperty().asObject().asString());
+
+        TableColumn<Book, String> publisherColumn = new TableColumn<>("Publisher");
+        publisherColumn.setCellValueFactory(cellData -> cellData.getValue().publisherProperty());
+
+        TableColumn<Book, String> categoryColumn = new TableColumn<>("Category");
+        categoryColumn.setCellValueFactory(cellData -> cellData.getValue().categoryProperty());
+
+        TableColumn<Book, Integer> quantityColumn = new TableColumn<>("Quantity");
+        quantityColumn.setCellValueFactory(cellData -> cellData.getValue().quantityProperty().asObject());
+
+        TableColumn<Book, String> descriptionColumn = new TableColumn<>("Description");
+        descriptionColumn.setCellValueFactory(cellData -> cellData.getValue().descriptionProperty());
+
+        TableColumn<Book, Boolean> availableColumn = new TableColumn<>("Available");
+        availableColumn.setCellValueFactory(cellData -> cellData.getValue().availableProperty().asObject());
+
+        tableView.getColumns().addAll(idColumn, titleColumn, authorColumn, isbnColumn, publisherColumn, categoryColumn, quantityColumn, descriptionColumn, availableColumn);
+
+        // Take a snapshot of the table
+        WritableImage image = tableView.snapshot(null, null);
+
+        // Save the image to a file
+        File file = new File("books.png");
+        try {
+            ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
+            showAlert(Alert.AlertType.INFORMATION, "Success", "Books exported to Image successfully.");
+        } catch (IOException e) {
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to export books to Image.");
+            e.printStackTrace();
+        }
+    }
+    
 
     @FXML
     private void handleImport() {
@@ -190,6 +345,8 @@ public class BookController {
         refreshTable();
     }
 
+
+
     @FXML
     private void handleHomeButtonClicked() {
         try {
@@ -202,7 +359,7 @@ public class BookController {
         } catch (IOException e) {
             Logger.getLogger(BookController.class.getName()).log(Level.SEVERE, "Error loading dashboard view", e);
         }
-        // Implement home button logic
+
     }
 
     private void refreshTable() {
@@ -239,3 +396,4 @@ public class BookController {
         resourcesTable.getItems().addAll(books);
     }
 }
+
