@@ -15,16 +15,12 @@ public class Dashboard extends Application {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/abudu/lms/library/dashboard.fxml"));
             Scene scene = new Scene(loader.load());
             UserSession userSession = UserSession.getInstance();
-            String username = (userSession.getCurrentUser() != null) ? userSession.getCurrentUser().getName() : null;
+            String username = (userSession.getCurrentUser() != null) ? userSession.getCurrentUser().getName() : "Guest";
 
             DashboardController controller = loader.getController();
-            if (username != null) {
-                controller.setUsernameLabel(username);
-                controller.setLogoutButtonText("Logout");
-            } else {
-                controller.setUsernameLabel("Guest");
-                controller.setLogoutButtonText("Login");
-            }
+            controller.setUsernameLabel(username);
+            controller.setLogoutButtonText(userSession.getCurrentUser() != null ? "Logout" : "Login");
+
             scene.getStylesheets().add(getClass().getResource("/abudu/lms/library/styles/styles.css").toExternalForm());
             primaryStage.setScene(scene);
             primaryStage.setTitle("Dashboard");

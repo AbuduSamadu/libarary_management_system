@@ -1,5 +1,6 @@
 package abudu.lms.library.controller;
 
+import abudu.lms.library.models.User;
 import abudu.lms.library.utils.UserSession;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -23,12 +24,18 @@ import java.util.logging.Logger;
 
 public class DashboardController {
 
-    public PieChart resourceChart;
-    public BarChart transactionBarChart;
-    public Button reportsButton;
-    public CategoryAxis xAxis;
-    public NumberAxis yAxis;
-    public BorderPane dashboard;
+    @FXML
+    private PieChart resourceChart;
+    @FXML
+    private BarChart<String, Number> transactionBarChart;
+    @FXML
+    private Button reportsButton;
+    @FXML
+    private CategoryAxis xAxis;
+    @FXML
+    private NumberAxis yAxis;
+    @FXML
+    private BorderPane dashboard;
 
     @FXML
     private Label totalBooksLabel;
@@ -42,42 +49,49 @@ public class DashboardController {
     @FXML
     private Label usernameLabel;
 
+    @FXML
+    private Button homeButton;
+    @FXML
+    private Button aboutButton;
+    @FXML
+    private Button contactButton;
+    @FXML
+    private TextField globalSearchField;
+    @FXML
+    private ImageView logo;
+    @FXML
+    private Button sidebarHomeButton;
+    @FXML
+    private Button booksButton;
+    @FXML
+    private Button usersButton;
+    @FXML
+    private Button settingsButton;
+    @FXML
+    private VBox mainBoard;
+    @FXML
+    private Button logoutButton;
+
+    @FXML
+    private void initialize() {
+        UserSession userSession = UserSession.getInstance();
+        User currentUser = userSession.getCurrentUser();
+        if (currentUser != null) {
+            setUsernameLabel(currentUser.getName());
+            setLogoutButtonText("Logout");
+        } else {
+            setUsernameLabel("Guest");
+            setLogoutButtonText("Login");
+        }
+    }
+
     public void setUsernameLabel(String username) {
         usernameLabel.setText("Welcome, " + username);
     }
 
-    @FXML
-    private Button homeButton;
-
-    @FXML
-    private Button aboutButton;
-
-    @FXML
-    private Button contactButton;
-
-    @FXML
-    private TextField globalSearchField;
-
-    @FXML
-    private ImageView logo;
-
-    @FXML
-    private Button sidebarHomeButton;
-
-    @FXML
-    private Button booksButton;
-
-    @FXML
-    private Button usersButton;
-
-    @FXML
-    private Button settingsButton;
-
-    @FXML
-    private VBox mainBoard;
-
-    @FXML
-    private Button logoutButton;
+    public void setLogoutButtonText(String text) {
+        logoutButton.setText(text);
+    }
 
     @FXML
     private void handleHomeButtonClick() {
@@ -103,13 +117,14 @@ public class DashboardController {
             double width = stage.getWidth();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/abudu/lms/library/book.fxml"));
             Parent root = loader.load();
-            Scene scene = new Scene(root,width,height);
+            Scene scene = new Scene(root, width, height);
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {
             Logger.getLogger(DashboardController.class.getName()).log(Level.SEVERE, "Error loading book view", e);
         }
     }
+
     @FXML
     private void handleUsersButtonClick() {
         // Handle users button click
@@ -121,18 +136,21 @@ public class DashboardController {
     }
 
     public void handleDarkModeToggle(ActionEvent actionEvent) {
+        // Handle dark mode toggle
     }
 
     public void handleReportsButtonClick(ActionEvent actionEvent) {
+        // Handle reports button click
     }
 
     public void handleLogoutClick(ActionEvent actionEvent) {
+        // Handle logout click
     }
 
     @FXML
     private void handleLogoutButtonClick(ActionEvent actionEvent) {
         if ("Logout".equals(logoutButton.getText())) {
-            UserSession.getInstance().getCurrentUser().setName(null);
+            UserSession.getInstance().clearSession();
             setUsernameLabel("Guest");
             setLogoutButtonText("Login");
         } else {
@@ -159,12 +177,18 @@ public class DashboardController {
 
             dialogStage.showAndWait();
 
+            // After login dialog is closed, update the username and button text
+            User currentUser = UserSession.getInstance().getCurrentUser();
+            if (currentUser != null) {
+                setUsernameLabel(currentUser.getName());
+                setLogoutButtonText("Logout");
+            } else {
+                setUsernameLabel("Guest");
+                setLogoutButtonText("Login");
+            }
+
         } catch (IOException e) {
             Logger.getLogger(DashboardController.class.getName()).log(Level.SEVERE, "Error loading login dialog", e);
         }
-    }
-
-    public void setLogoutButtonText(String text) {
-        logoutButton.setText(text);
     }
 }

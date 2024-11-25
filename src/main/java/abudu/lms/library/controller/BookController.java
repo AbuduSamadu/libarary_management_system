@@ -1,7 +1,9 @@
 package abudu.lms.library.controller;
 
 import abudu.lms.library.models.Book;
+import abudu.lms.library.models.User;
 import abudu.lms.library.repository.BookRepositoryImpl;
+import abudu.lms.library.security.AccessControl;
 import abudu.lms.library.utils.UserSession;
 import javafx.collections.FXCollections;
 import javafx.embed.swing.SwingFXUtils;
@@ -18,13 +20,12 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -97,6 +98,11 @@ public class BookController {
     @FXML
     private VBox resourceBox;
 
+    @FXML
+    private Button addBookButton;
+
+    @FXML
+
     private final BookRepositoryImpl bookRepository;
 
     public BookController() {
@@ -109,10 +115,10 @@ public class BookController {
     @FXML
     private void handleAddResource() {
         // Check if the user is authenticated
-//        if (UserSession.getInstance().getCurrentUser() == null) {
-//            showAlert(Alert.AlertType.ERROR, "Authentication Required", "You must be logged in to add a book.");
-//            return;
-//        }
+        if (UserSession.getInstance().getCurrentUser() == null) {
+            showAlert(Alert.AlertType.ERROR, "Authentication Required", "You must be logged in to add a book.");
+            return;
+        }
 
         String title = titleField.getText();
         String author = authorField.getText();
@@ -133,12 +139,12 @@ public class BookController {
             return;
         }
         String description = descriptionArea.getText();
-//        long userId = UserSession.getInstance().getCurrentUser().getId();// Get the logged in user id
-//        if (userId <= 0) {
-//            System.out.println(" userId" + userId);
-//            showAlert(Alert.AlertType.ERROR, "Invalid User", "The logged in user is invalid.");
-//            return;
-//        }
+        long userId = UserSession.getInstance().getCurrentUser().getId();// Get the logged in user id
+        if (userId <= 0) {
+            System.out.println(" userId" + userId);
+            showAlert(Alert.AlertType.ERROR, "Invalid User", "The logged in user is invalid.");
+            return;
+        }
 
         Book book = new Book(0, title, author, publisher, year, (int) isbn, true, category, quantity, description, 15);
         try {
@@ -162,6 +168,9 @@ public class BookController {
     private void initialize() {
         categoryComboBox.setItems(FXCollections.observableArrayList("Books", "Magazine", "Journal"));
         handleFetchBook();
+        checkUserRole();
+
+
 
         idColumn.setCellValueFactory(cellData -> cellData.getValue().idProperty().asObject());
         titleColumn.setCellValueFactory(cellData -> cellData.getValue().titleProperty());
@@ -215,6 +224,8 @@ public class BookController {
 
         searchField.textProperty().addListener((observable, oldValue, newValue) -> filterBooks(newValue));
     }
+
+
     private void filterBooks(String query) {
         List<Book> books = bookRepository.getAllBooks();
         if (query == null || query.isEmpty()) {
@@ -228,6 +239,15 @@ public class BookController {
             resourcesTable.getItems().setAll(filteredBooks);
         }
         updateStatusLabels(resourcesTable.getItems());
+    }
+
+
+    private void checkUserRole() {
+        UserSession userSession = UserSession.getInstance();
+        User currentUser = userSession.getCurrentUser();
+        if (currentUser != null && !AccessControl.hasRole(currentUser, "librarian")) {
+            addBookButton.setVisible(false); // Hide the button if the user is not a librarian
+        }
     }
 
     @FXML
@@ -329,11 +349,49 @@ public class BookController {
             e.printStackTrace();
         }
     }
-    
+
 
     @FXML
     private void handleImport() {
-        // Implement import logic
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Import Books");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("CSV Files", "*.csv"),
+                new FileChooser.ExtensionFilter("All Files", "*.*")
+        );
+        File selectedFile = fileChooser.showOpenDialog(null);
+        if (selectedFile != null) {
+            importBooksFromFile(selectedFile);
+        }
+    }
+
+    private void importBooksFromFile(File file) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] fields = line.split(",");
+                if (fields.length == 10) {
+                    String title = fields[0];
+                    String author = fields[1];
+                    String publisher = fields[2];
+                    int year = Integer.parseInt(fields[3]);
+                    int isbn = Integer.parseInt(fields[4]);
+                    boolean available = Boolean.parseBoolean(fields[5]);
+                    String category = fields[6];
+                    int quantity = Integer.parseInt(fields[7]);
+                    String description = fields[8];
+                    long userId = Long.parseLong(fields[9]);
+
+                    Book book = new Book(0, title, author, publisher, year, isbn, available, category, quantity, description, userId);
+                    bookRepository.addBook(book);
+                }
+            }
+            showAlert(Alert.AlertType.INFORMATION, "Success", "Books imported successfully.");
+            refreshTable();
+        } catch (IOException | NumberFormatException e) {
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to import books.");
+            e.printStackTrace();
+        }
     }
 
     @FXML
