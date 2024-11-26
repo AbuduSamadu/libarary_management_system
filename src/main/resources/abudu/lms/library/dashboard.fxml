@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
 <?import javafx.scene.chart.BarChart?>
 <?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.chart.PieChart?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
@@ -47,12 +45,12 @@
             <!-- Dashboard Cards -->
             <HBox alignment="CENTER" spacing="20">
                 <VBox alignment="CENTER" styleClass="card" spacing="10">
-                    <Label text="Total Books" styleClass="card-title"/>
-                    <Label text="1,250" styleClass="card-value"/>
+                    <Label  text="Total Books" styleClass="card-title"/>
+                    <Label fx:id="totalBooksLabel" text="1,250" styleClass="card-value"/>
                 </VBox>
                 <VBox alignment="CENTER" styleClass="card" spacing="10">
-                    <Label text="Total Users" styleClass="card-title"/>
-                    <Label text="543" styleClass="card-value"/>
+                    <Label   text="Total Users" styleClass="card-title"/>
+                    <Label fx:id="totalUsersLabel"  text="543" styleClass="card-value"/>
                 </VBox>
                 <VBox alignment="CENTER" styleClass="card" spacing="10">
                     <Label text="Issued Books" styleClass="card-title"/>

@@ -54,6 +54,11 @@ public class BookDataHandler {
                 return false;
             }
 
+            @Override
+            public int countBooks() {
+                return 0;
+            }
+
 
         };
     }

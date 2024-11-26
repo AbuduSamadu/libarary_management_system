@@ -134,4 +134,19 @@ public class UserDataHandler {
             }
         }
     }
+
+
+    public int countUsers() {
+        String query = "SELECT COUNT(*) FROM users";
+        try (Connection connection = dbHandler.getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(UserDataHandler.class.getName()).log(Level.SEVERE, "An error occurred while counting users in the database", e);
+        }
+        return 0;
+    }
 }

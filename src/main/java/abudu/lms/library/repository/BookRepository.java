@@ -24,4 +24,6 @@ public interface BookRepository {
 ;
 
     boolean borrowBook(int bookId);
+
+    int countBooks();
 }

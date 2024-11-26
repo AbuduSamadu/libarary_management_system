@@ -188,4 +188,19 @@ public class BookRepositoryImpl implements BookRepository {
             return false;
         }
     }
+
+    @Override
+    public int countBooks() {
+        String query = "SELECT COUNT(*) FROM books";
+        try (Connection connection = dbHandler.getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(BookRepositoryImpl.class.getName()).log(Level.SEVERE, "An error occurred while counting books in the database", e);
+        }
+        return 0;
+    }
 }

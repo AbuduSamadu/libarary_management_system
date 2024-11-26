@@ -93,7 +93,7 @@ public class BookController {
 
                 borrowButton.setOnAction(event -> {
                     Book book = getTableView().getItems().get(getIndex());
-                    // Handle borrow action
+                    handleBorrowBook(book);
                 });
             }
 

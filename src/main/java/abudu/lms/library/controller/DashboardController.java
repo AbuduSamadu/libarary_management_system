@@ -1,6 +1,7 @@
 package abudu.lms.library.controller;
 
 import abudu.lms.library.models.User;
+import abudu.lms.library.services.DashboardService;
 import abudu.lms.library.utils.UserSession;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -74,26 +75,31 @@ public class DashboardController {
     @FXML
     private Button logoutButton;
 
+    private DashboardService dashboardService;
+
+    public DashboardController() {
+    }
+
+    // Setter for DashboardService
+    public void setDashboardService(DashboardService dashboardService) {
+        this.dashboardService = dashboardService;
+        updateDashboardData();
+
+    }
+
+    private void updateDashboardData() {
+        int totalUsers = dashboardService.getTotalUsers();
+        int totalBooks = dashboardService.getTotalBooks();
+
+        totalUsersLabel.setText(String.valueOf(totalUsers));
+        totalBooksLabel.setText(String.valueOf(totalBooks));
+    }
+
     @FXML
     private void initialize() {
-        UserSession userSession = UserSession.getInstance();
-        User currentUser = userSession.getCurrentUser();
-        if (currentUser != null) {
-            setUsernameLabel(currentUser.getName());
-            setLogoutButtonText("Logout");
-        } else {
-            setUsernameLabel("Guest");
-            setLogoutButtonText("Login");
-        }
+      updateUserSessionUI();
     }
 
-    public void setUsernameLabel(String username) {
-        usernameLabel.setText("Welcome, " + username);
-    }
-
-    public void setLogoutButtonText(String text) {
-        logoutButton.setText(text);
-    }
 
     @FXML
     private void handleHomeButtonClick() {
@@ -123,34 +129,46 @@ public class DashboardController {
     private void handleSettingsButtonClick() {
         // Handle settings button click
     }
+    public void setUsernameLabel(String username) {
+        usernameLabel.setText("Welcome, " + username);
+    }
+
+    public void setLogoutButtonText(String text) {
+        logoutButton.setText(text);
+    }
 
     @FXML
     private void handleLogoutButtonClick(ActionEvent actionEvent) {
         if ("Logout".equals(logoutButton.getText())) {
             UserSession.getInstance().clearSession();
-            setUsernameLabel("Guest");
-            setLogoutButtonText("Login");
+            updateUserSessionUI();
         } else {
             showLoginDialog();
         }
     }
 
+
     private void showLoginDialog() {
         try {
-         loadScene("/abudu/lms/library/login.fxml", "Login");
+         loadScene("/abudu/lms/library/login.fxml", "Login", 400, 300);
 
             // After login dialog is closed, update the username and button text
-            User currentUser = UserSession.getInstance().getCurrentUser();
-            if (currentUser != null) {
-                setUsernameLabel(currentUser.getName());
-                setLogoutButtonText("Logout");
-            } else {
-                setUsernameLabel("Guest");
-                setLogoutButtonText("Login");
-            }
+           updateUserSessionUI();
 
         } catch (IOException e) {
             Logger.getLogger(DashboardController.class.getName()).log(Level.SEVERE, "Error loading login dialog", e);
+        }
+    }
+
+    private void updateUserSessionUI() {
+        UserSession userSession = UserSession.getInstance();
+        User currentUser = userSession.getCurrentUser();
+        if (currentUser != null) {
+            setUsernameLabel(currentUser.getName());
+            setLogoutButtonText("Logout");
+        } else {
+            setUsernameLabel("Guest");
+            setLogoutButtonText("Login");
         }
     }
 
@@ -164,30 +182,22 @@ public class DashboardController {
         loadScene("/abudu/lms/library/borrow.fxml", "Borrow Book",1080, 720);
     }
 
-    private void loadScene(String fxmlPath, String title, double width, double height) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
-        Stage modalStage = new Stage();
-        modalStage.setTitle(title);
-        modalStage.initModality(Modality.WINDOW_MODAL);
-        modalStage.initOwner(dashboard.getScene().getWindow());
 
-        Scene scene = new Scene(loader.load());
-        modalStage.setScene(scene);
-
-        modalStage.setWidth(width);
-        modalStage.setHeight(height);
-
-        modalStage.showAndWait();
-
-        User currentUser = UserSession.getInstance().getCurrentUser();
-        if (currentUser != null) {
-            setUsernameLabel(currentUser.getName());
-        }
-    }
 
     private void loadScene(String fxmlPath, String title) throws IOException {
-        // Call the main method with default width and height values
-        loadScene(fxmlPath, title, 400, 300);
+        Stage stage = (Stage) dashboard.getScene().getWindow();
+        double height = stage.getHeight();
+        double width = stage.getWidth();
+        loadScene(fxmlPath, title, width, height);
+    }
+
+    private void loadScene(String fxmlPath, String title, double width, double height) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+        Parent root = loader.load();
+        Scene scene = new Scene(root, width, height);
+        Stage stage = (Stage) dashboard.getScene().getWindow();
+        stage.setScene(scene);
+        stage.show();
     }
 
 }
