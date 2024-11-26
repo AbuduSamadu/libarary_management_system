@@ -43,7 +43,7 @@ public class UserLoginController {
         String email = emailField.getText().trim();
         String password = passwordField.getText().trim();
 
-        if (!isValidEmail(email)) {
+        if (!userDataHandler.isValidEmail(email)) {
             showAlert(AlertType.WARNING, "Warning", "Please enter a valid email address.");
             return;
         }
@@ -59,6 +59,7 @@ public class UserLoginController {
                 User user = userDataHandler.getUserByEmail(email);
                 if (user != null && BCrypt.checkpw(password, user.getPassword())) {
                     updateMessage("Login successful!");
+                    UserSession.getInstance().getCurrentUser();
                     Platform.runLater(() -> loadDashboard());
                 } else {
                     updateMessage("Invalid email or password.");
@@ -77,9 +78,7 @@ public class UserLoginController {
         new Thread(loginTask).start();
     }
 
-    private boolean isValidEmail(String email) {
-        return email.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$");
-    }
+
 
     private void loadDashboard() {
         try {
@@ -102,7 +101,7 @@ public class UserLoginController {
         try {
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/abudu/lms/library/register.fxml")));
             Stage stage = (Stage) emailField.getScene().getWindow();
-            stage.setScene(new Scene(root, 400, 600));
+            stage.setScene(new Scene(root, 800, 600));
         } catch (IOException e) {
             Logger.getLogger(UserLoginController.class.getName()).log(Level.SEVERE, "An error occurred while trying to load the registration screen", e);
         }

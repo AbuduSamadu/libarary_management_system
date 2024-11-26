@@ -5,15 +5,14 @@
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
 <VBox xmlns="http://javafx.com/javafx"
-
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="abudu.lms.library.controller.BookController"
+      fx:controller="abudu.lms.library.controller.BorrowController"
       stylesheets="@styles/resources.css"
       spacing="10">
 
     <!-- Navigation Bar -->
     <HBox styleClass="nav-bar">
-        <Label text="Book Management" styleClass="nav-title"/>
+        <Label text="Borrow Book" styleClass="nav-title"/>
         <Pane HBox.hgrow="ALWAYS" />
         <Button fx:id="homeButton" styleClass="home-button" onAction="#handleHomeButtonClicked">
             <graphic>
@@ -26,31 +25,19 @@
     <HBox spacing="20" VBox.vgrow="ALWAYS" style="-fx-padding: 20;">
         <!-- Left Panel -->
         <VBox spacing="20" prefWidth="300">
-            <!-- Add Resource Form -->
+            <!-- Borrow Book Form -->
             <VBox spacing="15" styleClass="form-container">
-                <Label text="Add New Book" styleClass="section-header"/>
+                <Label text="Borrow a Book" styleClass="section-header"/>
                 <TextField fx:id="titleField" styleClass="modern-field" promptText="Title"/>
                 <TextField fx:id="authorField" styleClass="modern-field" promptText="Author"/>
                 <TextField fx:id="isbnField" styleClass="modern-field" promptText="ISBN" />
-                <DatePicker fx:id="yearPicker" styleClass="modern-field" promptText="Year"/>
-                <ComboBox fx:id="categoryComboBox" styleClass="modern-field" promptText="Category"/>
-                <TextField fx:id="publisherField" styleClass="modern-field" promptText="Publisher"/>
-                <TextField fx:id="quantityField" styleClass="modern-field" promptText="Quantity"/>
-                <TextArea fx:id="descriptionArea" styleClass="modern-field" promptText="Description" prefRowCount="3"/>
+                <DatePicker fx:id="borrowDatePicker" styleClass="modern-field" promptText="Borrow Date"/>
+                <TextField fx:id="userIdField" styleClass="modern-field" promptText="User ID"/>
+                <TextArea fx:id="notesArea" styleClass="modern-field" promptText="Notes" prefRowCount="3"/>
                 <HBox spacing="10">
-                    <Button text="Add Book" styleClass="primary-button" onAction="#handleAddResource"/>
+                    <Button text="Borrow Book" styleClass="primary-button" onAction="#handleBorrowBook"/>
                     <Button text="Clear" styleClass="secondary-button" onAction="#handleClearForm"/>
                 </HBox>
-            </VBox>
-
-            <!-- Filter Section -->
-            <VBox spacing="15" styleClass="filter-container">
-                <Label text="Filters" styleClass="section-header"/>
-                <ComboBox fx:id="filterCategoryComboBox" styleClass="modern-field" promptText="Filter by Category" onAction="#handleApplyFilters"/>
-                <ComboBox fx:id="filterStatusComboBox" styleClass="modern-field" promptText="Filter by Status"/>
-                <TextField fx:id="filterPublisherField" styleClass="modern-field" promptText="Filter by Publisher"/>
-                <DatePicker fx:id="acquisitionDatePicker" styleClass="modern-field" promptText="Filter by Acquisition Date"/>
-                <Button text="Apply Filters" styleClass="accent-button" onAction="#handleApplyFilters"/>
             </VBox>
         </VBox>
 
@@ -58,7 +45,7 @@
         <VBox spacing="15" HBox.hgrow="ALWAYS" styleClass="right-panel">
             <!-- Search and Actions Container -->
             <HBox spacing="15" styleClass="search-actions-container">
-                <TextField fx:id="searchField" promptText="Search resources..."
+                <TextField fx:id="searchField" promptText="Search borrowings..."
                            styleClass="search-field" HBox.hgrow="ALWAYS"/>
                 <Button text="Export" styleClass="tool-button" onAction="#handleExport">
                     <graphic>
@@ -82,28 +69,20 @@
                 </Button>
             </HBox>
 
-            <!-- Resources List Label -->
-            <Label text="Book Resources" styleClass="users-list-header"/>
+            <!-- Borrowings List Label -->
+            <Label text="Book Borrowings" styleClass="users-list-header"/>
 
-            <!-- Resources Table -->
-            <TableView fx:id="resourcesTable" VBox.vgrow="ALWAYS" styleClass="modern-table">
+            <!-- Borrowings Table -->
+            <TableView fx:id="borrowingsTable" VBox.vgrow="ALWAYS" styleClass="modern-table">
                 <columns>
                     <TableColumn fx:id="idColumn" text="ID" prefWidth="50"/>
                     <TableColumn fx:id="titleColumn" text="Title" prefWidth="100"/>
                     <TableColumn fx:id="authorColumn" text="Author" prefWidth="150" />
                     <TableColumn fx:id="isbnColumn" text="ISBN" prefWidth="120" />
-                    <TableColumn fx:id="publicationColumn" text="Publication Date" prefWidth="100" />
-                    <TableColumn fx:id="categoryColumn" text="Category" prefWidth="100"/>
-                    <TableColumn fx:id="quantityColumn" text="Quantity" />
-                    <TableColumn fx:id="descriptionColumn" text="Description" prefWidth="200"/>
-                    <TableColumn fx:id="availableColumn" text="Available" prefWidth="100"/>
+                    <TableColumn fx:id="borrowDateColumn" text="Borrow Date" prefWidth="100" />
+                    <TableColumn fx:id="userIdColumn" text="User ID" prefWidth="100"/>
+                    <TableColumn fx:id="notesColumn" text="Notes" prefWidth="200"/>
                     <TableColumn fx:id="actionsColumn" text="Actions" prefWidth="150"/>
-                </columns>
-            </TableView>
-
-            <TableView fx:id="journalTable" visible="false" VBox.vgrow="ALWAYS" styleClass="modern-table">
-                <columns>
-                    <!-- Define columns for the journal table here -->
                 </columns>
             </TableView>
 
@@ -111,9 +90,9 @@
             <HBox styleClass="status-bar">
                 <Label fx:id="statusLabel" text="Ready" styleClass="status-text"/>
                 <Pane HBox.hgrow="ALWAYS"/>
-                <Label fx:id="totalResourcesLabel" text="Total Resources: 0" styleClass="status-text"/>
-                <Label fx:id="availableResourcesLabel" text=" | Available: 0" styleClass="status-text"/>
-                <Label fx:id="checkedOutLabel" text=" | Checked Out: 0" styleClass="status-text"/>
+                <Label fx:id="totalBorrowingsLabel" text="Total Borrowings: 0" styleClass="status-text"/>
+                <Label fx:id="activeBorrowingsLabel" text=" | Active: 0" styleClass="status-text"/>
+                <Label fx:id="completedBorrowingsLabel" text=" | Completed: 0" styleClass="status-text"/>
             </HBox>
         </VBox>
     </HBox>

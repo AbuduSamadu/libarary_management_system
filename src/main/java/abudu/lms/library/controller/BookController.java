@@ -10,12 +10,7 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -24,84 +19,37 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.io.*;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-
-
 public class BookController {
 
-    public Button homeButton;
-    public TableView journalTable;
     @FXML
-    private TextField titleField;
-    @FXML
-    private TextField authorField;
-    @FXML
-    private TextField isbnField;
-    @FXML
-    private ComboBox<String> categoryComboBox;
-    @FXML
-    private TextField publisherField;
-    @FXML
-    private TextField quantityField;
-    @FXML
-    private TextArea descriptionArea;
-    @FXML
-    private ComboBox<String> filterCategoryComboBox;
-    @FXML
-    private ComboBox<String> filterStatusComboBox;
-    @FXML
-    private TextField filterPublisherField;
-    @FXML
-    private DatePicker acquisitionDatePicker;
-    @FXML
-    private TextField searchField;
+    private Button homeButton, addBookButton;
     @FXML
     private TableView<Book> resourcesTable;
     @FXML
-    private TableColumn<Book, Integer> idColumn;
+    private TableView journalTable;
     @FXML
-    private TableColumn<Book, String> titleColumn;
+    private TextField titleField, authorField, isbnField, publisherField, quantityField, filterPublisherField, searchField;
     @FXML
-    private TableColumn<Book, String> authorColumn;
+    private ComboBox<String> categoryComboBox, filterCategoryComboBox, filterStatusComboBox;
     @FXML
-    private TableColumn<Book, String> isbnColumn;
+    private TextArea descriptionArea;
     @FXML
-    private TableColumn<Book, String> categoryColumn;
+    private DatePicker yearPicker, acquisitionDatePicker;
     @FXML
-    private TableColumn<Book, String> publicationColumn;
+    private TableColumn<Book, Integer> idColumn, quantityColumn;
     @FXML
-    private TableColumn<Book, Integer> quantityColumn;
+    private TableColumn<Book, String> titleColumn, authorColumn, isbnColumn, categoryColumn, publicationColumn, descriptionColumn, availableColumn, actionsColumn, formatColumn;
     @FXML
-    private TableColumn<Book, String> descriptionColumn;
-    @FXML
-    private TableColumn<Book, String> availableColumn;
-    @FXML
-    private TableColumn<Book, String> actionsColumn;
-    @FXML
-    private TableColumn<Book, String> formatColumn;
-    @FXML
-    private Label statusLabel;
-    @FXML
-    private Label totalResourcesLabel;
-    @FXML
-    private Label availableResourcesLabel;
-    @FXML
-    private Label checkedOutLabel;
+    private Label statusLabel, totalResourcesLabel, availableResourcesLabel, checkedOutLabel;
     @FXML
     private VBox resourceBox;
-
-    @FXML
-    private Button addBookButton;
-
-    @FXML
 
     private final BookRepositoryImpl bookRepository;
 
@@ -110,68 +58,15 @@ public class BookController {
     }
 
     @FXML
-    private DatePicker yearPicker;
-
-    @FXML
-    private void handleAddResource() {
-        // Check if the user is authenticated
-        if (UserSession.getInstance().getCurrentUser() == null) {
-            showAlert(Alert.AlertType.ERROR, "Authentication Required", "You must be logged in to add a book.");
-            return;
-        }
-
-        String title = titleField.getText();
-        String author = authorField.getText();
-        String category = categoryComboBox.getValue();
-        String publisher = publisherField.getText();
-        int year = yearPicker.getValue().getYear(); // Get the year from DatePicker
-        int quantity;
-        String isbnStr = isbnField.getText();
-        if (!isbnStr.matches("\\d{13}")) {
-            showAlert(Alert.AlertType.ERROR, "Invalid ISBN", "ISBN must be exactly 13 digits.");
-            return;
-        }
-        long isbn = Long.parseLong(isbnStr);
-        try {
-            quantity = Integer.parseInt(quantityField.getText());
-        } catch (NumberFormatException e) {
-            showAlert(Alert.AlertType.ERROR, "Invalid Input", "Quantity must be a valid integer.");
-            return;
-        }
-        String description = descriptionArea.getText();
-        long userId = UserSession.getInstance().getCurrentUser().getId();// Get the logged in user id
-        if (userId <= 0) {
-            System.out.println(" userId" + userId);
-            showAlert(Alert.AlertType.ERROR, "Invalid User", "The logged in user is invalid.");
-            return;
-        }
-
-        Book book = new Book(0, title, author, publisher, year, (int) isbn, true, category, quantity, description, 15);
-        try {
-            bookRepository.addBook(book);
-            showAlert(Alert.AlertType.INFORMATION, "Success", "Book added successfully.");
-            refreshTable();
-        } catch (Exception e) {
-            showAlert(Alert.AlertType.ERROR, "Error", "Failed to add book.");
-        }
-    }
-
-    private void showAlert(Alert.AlertType alertType, String title, String message) {
-        Alert alert = new Alert(alertType);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-
-    @FXML
     private void initialize() {
         categoryComboBox.setItems(FXCollections.observableArrayList("Books", "Magazine", "Journal"));
         handleFetchBook();
         checkUserRole();
+        setupTableColumns();
+        setupSearchField();
+    }
 
-
-
+    private void setupTableColumns() {
         idColumn.setCellValueFactory(cellData -> cellData.getValue().idProperty().asObject());
         titleColumn.setCellValueFactory(cellData -> cellData.getValue().titleProperty());
         authorColumn.setCellValueFactory(cellData -> cellData.getValue().authorProperty());
@@ -214,39 +109,56 @@ public class BookController {
             }
         });
 
-
         resourcesTable.setRowFactory(tv -> {
             TableRow<Book> row = new TableRow<>();
             row.setPrefHeight(40); // Adjust the height as needed
             return row;
         });
+    }
 
-
+    private void setupSearchField() {
         searchField.textProperty().addListener((observable, oldValue, newValue) -> filterBooks(newValue));
     }
 
-
-    private void filterBooks(String query) {
-        List<Book> books = bookRepository.getAllBooks();
-        if (query == null || query.isEmpty()) {
-            resourcesTable.getItems().setAll(books);
-        } else {
-            List<Book> filteredBooks = books.stream()
-                    .filter(book -> book.getTitle().toLowerCase().contains(query.toLowerCase()) ||
-                            book.getAuthor().toLowerCase().contains(query.toLowerCase()) ||
-                            String.valueOf(book.getIsbn()).contains(query))
-                    .collect(Collectors.toList());
-            resourcesTable.getItems().setAll(filteredBooks);
+    @FXML
+    private void handleAddResource() {
+        if (UserSession.getInstance().getCurrentUser() == null) {
+            showAlert(Alert.AlertType.ERROR, "Authentication Required", "You must be logged in to add a book.");
+            return;
         }
-        updateStatusLabels(resourcesTable.getItems());
-    }
 
+        String title = titleField.getText();
+        String author = authorField.getText();
+        String category = categoryComboBox.getValue();
+        String publisher = publisherField.getText();
+        int year = yearPicker.getValue().getYear();
+        int quantity;
+        String isbnStr = isbnField.getText();
+        if (!isbnStr.matches("\\d{13}")) {
+            showAlert(Alert.AlertType.ERROR, "Invalid ISBN", "ISBN must be exactly 13 digits.");
+            return;
+        }
+        long isbn = Long.parseLong(isbnStr);
+        try {
+            quantity = Integer.parseInt(quantityField.getText());
+        } catch (NumberFormatException e) {
+            showAlert(Alert.AlertType.ERROR, "Invalid Input", "Quantity must be a valid integer.");
+            return;
+        }
+        String description = descriptionArea.getText();
+        long userId = UserSession.getInstance().getCurrentUser().getId();
+        if (userId <= 0) {
+            showAlert(Alert.AlertType.ERROR, "Invalid User", "The logged in user is invalid.");
+            return;
+        }
 
-    private void checkUserRole() {
-        UserSession userSession = UserSession.getInstance();
-        User currentUser = userSession.getCurrentUser();
-        if (currentUser != null && !AccessControl.hasRole(currentUser, "librarian")) {
-            addBookButton.setVisible(false); // Hide the button if the user is not a librarian
+        Book book = new Book(0, title, author, publisher, year, (int) isbn, true, category, quantity, description, 15);
+        try {
+            bookRepository.addBook(book);
+            showAlert(Alert.AlertType.INFORMATION, "Success", "Book added successfully.");
+            refreshTable();
+        } catch (Exception e) {
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to add book.");
         }
     }
 
@@ -296,17 +208,17 @@ public class BookController {
     }
 
     private void exportToPDF(List<Book> books) {
+        // Implement export to PDF logic
     }
 
     private void exportToExcel(List<Book> books) {
+        // Implement export to Excel logic
     }
-
 
     private void exportToImage(List<Book> books) {
         TableView<Book> tableView = new TableView<>();
         tableView.getItems().setAll(books);
 
-        // Add columns to the tableView
         TableColumn<Book, Integer> idColumn = new TableColumn<>("ID");
         idColumn.setCellValueFactory(cellData -> cellData.getValue().idProperty().asObject());
 
@@ -336,10 +248,8 @@ public class BookController {
 
         tableView.getColumns().addAll(idColumn, titleColumn, authorColumn, isbnColumn, publisherColumn, categoryColumn, quantityColumn, descriptionColumn, availableColumn);
 
-        // Take a snapshot of the table
         WritableImage image = tableView.snapshot(null, null);
 
-        // Save the image to a file
         File file = new File("books.png");
         try {
             ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
@@ -349,7 +259,6 @@ public class BookController {
             e.printStackTrace();
         }
     }
-
 
     @FXML
     private void handleImport() {
@@ -404,8 +313,6 @@ public class BookController {
         refreshTable();
     }
 
-
-
     @FXML
     private void handleHomeButtonClicked() {
         try {
@@ -414,11 +321,9 @@ public class BookController {
             Scene scene = new Scene(dashboardView);
             Stage stage = (Stage) homeButton.getScene().getWindow();
             stage.setScene(scene);
-
         } catch (IOException e) {
             Logger.getLogger(BookController.class.getName()).log(Level.SEVERE, "Error loading dashboard view", e);
         }
-
     }
 
     private void refreshTable() {
@@ -436,6 +341,30 @@ public class BookController {
         availableResourcesLabel.setText(" | Available: " + availableResources);
         checkedOutLabel.setText(" | Checked Out: " + checkedOutResources);
     }
+
+    private void filterBooks(String query) {
+        List<Book> books = bookRepository.getAllBooks();
+        if (query == null || query.isEmpty()) {
+            resourcesTable.getItems().setAll(books);
+        } else {
+            List<Book> filteredBooks = books.stream()
+                    .filter(book -> book.getTitle().toLowerCase().contains(query.toLowerCase()) ||
+                            book.getAuthor().toLowerCase().contains(query.toLowerCase()) ||
+                            String.valueOf(book.getIsbn()).contains(query))
+                    .collect(Collectors.toList());
+            resourcesTable.getItems().setAll(filteredBooks);
+        }
+        updateStatusLabels(resourcesTable.getItems());
+    }
+
+    private void checkUserRole() {
+        UserSession userSession = UserSession.getInstance();
+        User currentUser = userSession.getCurrentUser();
+        if (currentUser != null && !AccessControl.hasRole(currentUser, "librarian")) {
+            addBookButton.setVisible(false);
+        }
+    }
+
     @FXML
     private void handleFetchBook() {
         try {
@@ -454,5 +383,39 @@ public class BookController {
         resourcesTable.getItems().clear();
         resourcesTable.getItems().addAll(books);
     }
-}
 
+    private void showAlert(Alert.AlertType alertType, String title, String message) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    @FXML
+    private void handleBorrowBook(Book book) {
+        if (UserSession.getInstance().getCurrentUser() == null) {
+            showAlert(Alert.AlertType.ERROR, "Authentication Required", "You must be logged in to borrow a book.");
+            return;
+        }
+
+        if (!book.isAvailable()) {
+            showAlert(Alert.AlertType.ERROR, "Unavailable", "This book is currently unavailable.");
+            return;
+        }
+
+        long userId = UserSession.getInstance().getCurrentUser().getId();
+        if (userId <= 0) {
+            showAlert(Alert.AlertType.ERROR, "Invalid User", "The logged in user is invalid.");
+            return;
+        }
+
+        try {
+            bookRepository.borrowBook(book.getId());
+            showAlert(Alert.AlertType.INFORMATION, "Success", "Book borrowed successfully.");
+            refreshTable();
+        } catch (Exception e) {
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to borrow book.");
+        }
+    }
+}

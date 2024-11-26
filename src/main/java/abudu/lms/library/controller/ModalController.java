@@ -11,14 +11,12 @@ public class ModalController {
     private Label operationLabel;
 
     private Stage modalStage;
-    private  BookOperation currentOperation;
 
     public void setModalStage(Stage modalStage) {
         this.modalStage = modalStage;
     }
 
     public void setOperation(BookOperation operation) {
-        this.currentOperation = operation;
         operationLabel.setText("Operation: " + operation.name());
     }
 

@@ -50,9 +50,11 @@ public class BookDataHandler {
             }
 
             @Override
-            public boolean borrowBook(int id) {
+            public boolean borrowBook(int bookId) {
                 return false;
             }
+
+
         };
     }
 
@@ -82,7 +84,7 @@ public class BookDataHandler {
     }
 
     public boolean borrowBook(int id) {
-        return bookRepository.borrowBook(id);
+        return bookRepository.borrowBook(id );
     }
 
     public int generateNewId() {

@@ -1,18 +1,22 @@
 package abudu.lms.library.repository;
 
-import abudu.lms.library.database.DatabaseHandler;
-
-import abudu.lms.library.models.Book;
-import abudu.lms.library.models.BookLinkedList;
-import abudu.lms.library.models.BookNode;
-
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import abudu.lms.library.database.DatabaseHandler;
+import abudu.lms.library.models.Book;
+import abudu.lms.library.models.BookLinkedList;
+import abudu.lms.library.models.BookNode;
+
 public class BookRepositoryImpl implements BookRepository {
+
     private final DatabaseHandler dbHandler;
     private final BookLinkedList bookList;
 
@@ -50,9 +54,10 @@ public class BookRepositoryImpl implements BookRepository {
 
     @Override
     public void addBook(Book book) {
+        bookList.addBook(book);
         String sql = "INSERT INTO books (title, author, publisher, year, isbn, available, category, quantity, description, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = dbHandler.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, book.getTitle());
             pstmt.setString(2, book.getAuthor());
             pstmt.setString(3, book.getPublisher());
@@ -64,13 +69,6 @@ public class BookRepositoryImpl implements BookRepository {
             pstmt.setString(9, book.getDescription());
             pstmt.setLong(10, book.getUserId());
             pstmt.executeUpdate();
-
-            // Retrieve the generated id
-            try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    book.setId(generatedKeys.getInt(1));
-                }
-            }
         } catch (SQLException e) {
             Logger.getLogger(BookRepositoryImpl.class.getName()).log(Level.SEVERE, "An error occurred while adding a book to the database", e);
         }
@@ -92,8 +90,8 @@ public class BookRepositoryImpl implements BookRepository {
             existingBook.setUserId(book.getUserId());
         }
         String query = "UPDATE books SET title = ?, author = ?, publisher = ?, year = ?, isbn = ?, available = ?, category = ?, quantity = ?, description = ?, user_id = ? WHERE id = ?";
-        try (Connection connection = dbHandler.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
+        try (Connection conn = dbHandler.getConnection();
+             PreparedStatement statement = conn.prepareStatement(query)) {
             statement.setString(1, book.getTitle());
             statement.setString(2, book.getAuthor());
             statement.setString(3, book.getPublisher());
@@ -149,7 +147,6 @@ public class BookRepositoryImpl implements BookRepository {
     @Override
     public List<Book> searchBooks(String query) {
         // Implement this method if needed
-
         return List.of();
     }
 
@@ -159,9 +156,36 @@ public class BookRepositoryImpl implements BookRepository {
         return false;
     }
 
+
+
     @Override
-    public boolean borrowBook(int id) {
-        // Implement this method if needed
-        return false;
+    public boolean borrowBook(int bookId) {
+        Book book = getBookById(bookId);
+        if (book == null || !book.isAvailable()) {
+            return false;
+        }
+
+        String query = "UPDATE books SET available = false WHERE id = ?";
+        String insertBorrowing = "INSERT INTO borrowings (title, author, isbn, user_id, borrow_date, notes, active) VALUES (?, ?, ?, ?, CURRENT_DATE, '', true)";
+
+        try (Connection conn = dbHandler.getConnection();
+             PreparedStatement updateStmt = conn.prepareStatement(query);
+             PreparedStatement insertStmt = conn.prepareStatement(insertBorrowing)) {
+
+            updateStmt.setInt(1, bookId);
+            updateStmt.executeUpdate();
+
+            insertStmt.setString(1, book.getTitle());
+            insertStmt.setString(2, book.getAuthor());
+            insertStmt.setLong(3, book.getIsbn());
+            insertStmt.setLong(4, book.getUserId());
+            insertStmt.executeUpdate();
+
+            book.setAvailable(false);
+            return true;
+        } catch (SQLException e) {
+            Logger.getLogger(BookRepositoryImpl.class.getName()).log(Level.SEVERE, "An error occurred while borrowing a book", e);
+            return false;
+        }
     }
 }

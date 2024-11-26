@@ -21,6 +21,7 @@ public interface BookRepository {
     List<Book> searchBooks(String query);
 
     boolean returnBook(int id);
+;
 
-    boolean borrowBook(int id);
+    boolean borrowBook(int bookId);
 }

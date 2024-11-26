@@ -3,7 +3,6 @@ package abudu.lms.library.database;
 import abudu.lms.library.models.ERole;
 import abudu.lms.library.models.Role;
 import abudu.lms.library.models.User;
-import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -21,21 +20,15 @@ public class UserDataHandler {
     }
 
 
-    /**
-     * Add a new user to the database.
-     *
-     * @param firstName      the first name
-     * @param lastName       the last name
-     * @param username       the username
-     * @param email          the email
-     * @param hashedPassword the hashed password
-     * @param createdAt      the creation timestamp
-     * @param roles          the roles
-     * @return true if the user is added successfully, false otherwise
-     */
     public boolean addUser(String firstName, String lastName, String username, String email, String hashedPassword, LocalDateTime createdAt, Set<Role> roles) {
         final String query = "INSERT INTO users (first_name, last_name, username, email, password, created_at, role) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        return executeUpdate(query, firstName, lastName, username, email, hashedPassword, createdAt, roles.iterator().next().getName());
+        try {
+            dbHandler.executeUpdate(query, firstName, lastName, username, email, hashedPassword, createdAt, roles.iterator().next().getName());
+            return true;
+        } catch (SQLException e) {
+            Logger.getLogger(UserDataHandler.class.getName()).log(Level.SEVERE, "Error adding user: " + email, e);
+            return false;
+        }
     }
 
     /**
@@ -46,15 +39,9 @@ public class UserDataHandler {
      */
     public User getUserByEmail(String email) {
         final String query = "SELECT id, first_name, last_name, username, email, password, created_at, role FROM users WHERE email = ?";
-        try (Connection conn = dbHandler.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
-
-            stmt.setString(1, email);
-
-            try (ResultSet resultSet = stmt.executeQuery()) {
-                if (resultSet.next()) {
-                    return mapResultSetToUser(resultSet);
-                }
+        try (ResultSet resultSet = dbHandler.executeQuery(query, email)) {
+            if (resultSet.next()) {
+                return mapResultSetToUser(resultSet);
             }
         } catch (SQLException e) {
             Logger.getLogger(UserDataHandler.class.getName())
@@ -100,7 +87,7 @@ public class UserDataHandler {
      * @param password  the password
      * @return true if any input is invalid, false otherwise
      */
-    private boolean isInvalidInput(String firstName, String lastName, String username, String email, String password) {
+    public boolean isValidInput(String firstName, String lastName, String username, String email, String password) {
         return firstName == null || firstName.isEmpty() ||
                 lastName == null || lastName.isEmpty() ||
                 username == null || username.isEmpty() ||
@@ -114,30 +101,11 @@ public class UserDataHandler {
      * @param email the email
      * @return true if the email format is valid, false otherwise
      */
-    private boolean isValidEmail(String email) {
+    public boolean isValidEmail(String email) {
         return email != null && email.matches("^[\\w.%+-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$");
     }
 
-    /**
-     * Execute an update query (INSERT, UPDATE, DELETE) with parameters.
-     *
-     * @param query  the SQL query
-     * @param params the parameters for the query
-     * @return true if the query executes successfully, false otherwise
-     */
-    private boolean executeUpdate(String query, Object... params) {
-        try (Connection conn = dbHandler.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
 
-            setPreparedStatementParameters(stmt, params);
-            stmt.executeUpdate();
-            return true;
-
-        } catch (SQLException e) {
-            logSQLException("Error executing update query", e);
-            return false;
-        }
-    }
 
     /**
      * Log SQLException with a specific context.

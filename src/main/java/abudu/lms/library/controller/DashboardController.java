@@ -24,6 +24,8 @@ import java.util.logging.Logger;
 
 public class DashboardController {
 
+    public Button reserveButton;
+    public Button borrowButton;
     @FXML
     private PieChart resourceChart;
     @FXML
@@ -98,15 +100,6 @@ public class DashboardController {
         // Handle home button click
     }
 
-    @FXML
-    private void handleAboutButtonClick() {
-        // Handle about button click
-    }
-
-    @FXML
-    private void handleContactButtonClick() {
-        // Handle contact button click
-    }
 
     @FXML
     private void handleBooksButtonClick() {
@@ -125,26 +118,10 @@ public class DashboardController {
         }
     }
 
-    @FXML
-    private void handleUsersButtonClick() {
-        // Handle users button click
-    }
 
     @FXML
     private void handleSettingsButtonClick() {
         // Handle settings button click
-    }
-
-    public void handleDarkModeToggle(ActionEvent actionEvent) {
-        // Handle dark mode toggle
-    }
-
-    public void handleReportsButtonClick(ActionEvent actionEvent) {
-        // Handle reports button click
-    }
-
-    public void handleLogoutClick(ActionEvent actionEvent) {
-        // Handle logout click
     }
 
     @FXML
@@ -160,22 +137,7 @@ public class DashboardController {
 
     private void showLoginDialog() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/abudu/lms/library/login.fxml"));
-            Stage dialogStage = new Stage();
-            dialogStage.setTitle("Login");
-            dialogStage.initModality(Modality.WINDOW_MODAL);
-            dialogStage.initOwner(logoutButton.getScene().getWindow());
-
-            // Set the desired width and height
-            dialogStage.setWidth(400);
-            dialogStage.setHeight(300);
-
-            Scene scene = new Scene(loader.load());
-            dialogStage.setScene(scene);
-
-            UserLoginController controller = loader.getController();
-
-            dialogStage.showAndWait();
+         loadScene("/abudu/lms/library/login.fxml", "Login");
 
             // After login dialog is closed, update the username and button text
             User currentUser = UserSession.getInstance().getCurrentUser();
@@ -191,4 +153,41 @@ public class DashboardController {
             Logger.getLogger(DashboardController.class.getName()).log(Level.SEVERE, "Error loading login dialog", e);
         }
     }
+
+
+
+    public void handleReserveButtonClick(ActionEvent actionEvent) throws IOException {
+        loadScene("/abudu/lms/library/reserve.fxml", "Reserve Book",1080, 720);
+    }
+
+    public void handleBorrowButtonClick(ActionEvent actionEvent) throws IOException {
+        loadScene("/abudu/lms/library/borrow.fxml", "Borrow Book",1080, 720);
+    }
+
+    private void loadScene(String fxmlPath, String title, double width, double height) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+        Stage modalStage = new Stage();
+        modalStage.setTitle(title);
+        modalStage.initModality(Modality.WINDOW_MODAL);
+        modalStage.initOwner(dashboard.getScene().getWindow());
+
+        Scene scene = new Scene(loader.load());
+        modalStage.setScene(scene);
+
+        modalStage.setWidth(width);
+        modalStage.setHeight(height);
+
+        modalStage.showAndWait();
+
+        User currentUser = UserSession.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            setUsernameLabel(currentUser.getName());
+        }
+    }
+
+    private void loadScene(String fxmlPath, String title) throws IOException {
+        // Call the main method with default width and height values
+        loadScene(fxmlPath, title, 400, 300);
+    }
+
 }

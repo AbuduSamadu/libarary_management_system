@@ -36,3 +36,31 @@ CREATE TABLE books (
                        user_Id BIGINT,
                        FOREIGN KEY (user_id) REFERENCES users(id)
 );
+
+CREATE TABLE reservations (
+                              id SERIAL PRIMARY KEY,
+                              title VARCHAR(255) NOT NULL,
+                              author VARCHAR(255) NOT NULL,
+                              isbn BIGINT NOT NULL,
+                              user_id BIGINT NOT NULL,
+                              reservation_date VARCHAR(255) NOT NULL,
+                              notes TEXT,
+                              active BOOLEAN NOT NULL DEFAULT TRUE,
+                              CONSTRAINT fk_user
+                                  FOREIGN KEY(user_id)
+                                      REFERENCES users(id)
+);
+
+CREATE TABLE borrowings (
+                            id SERIAL PRIMARY KEY,
+                            title VARCHAR(255) NOT NULL,
+                            author VARCHAR(255) NOT NULL,
+                            isbn BIGINT NOT NULL,
+                            user_id BIGINT NOT NULL,
+                            borrow_date VARCHAR(255) NOT NULL,
+                            notes TEXT,
+                            active BOOLEAN NOT NULL DEFAULT TRUE,
+                            CONSTRAINT fk_user
+                                FOREIGN KEY(user_id)
+                                    REFERENCES users(id)
+);

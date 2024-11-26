@@ -9,15 +9,15 @@ import java.util.logging.Logger;
 public class DatabaseHandler {
     private static final Logger LOGGER = Logger.getLogger(DatabaseHandler.class.getName());
     private static final Dotenv dotenv = Dotenv.load();
-    private static final String URL = dotenv.get("DB_URL");
-    private static final String USER = dotenv.get("DB_USER");
-    private static final String PASSWORD = dotenv.get("DB_PASSWORD");
+    private static final String DB_URL = "jdbc:postgresql://localhost:5432/library";
+    private static final String DB_USER = "postgres";
+    private static final String DB_PASSWORD = "Abudu?0248";
 
     private Connection connection;
 
     private DatabaseHandler() {
         try {
-            connection = DriverManager.getConnection(URL, USER, PASSWORD);
+            connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "Failed to connect to the database", e);
             throw new RuntimeException("Database connection error", e);
@@ -35,7 +35,7 @@ public class DatabaseHandler {
     public Connection getConnection() {
         try {
             if (connection == null || connection.isClosed() || !connection.isValid(2)) {
-                connection = DriverManager.getConnection(URL, USER, PASSWORD);
+                connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
             }
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "Failed to reconnect to the database", e);

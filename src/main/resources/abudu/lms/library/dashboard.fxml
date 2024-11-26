@@ -31,7 +31,8 @@
             <ImageView fx:id="logo" fitWidth="100" preserveRatio="true"/>
             <Button text="Dashboard" fx:id="sidebarHomeButton" maxWidth="Infinity" styleClass="sidebar-button" onAction="#handleHomeButtonClick"/>
             <Button text="Books" fx:id="booksButton" maxWidth="Infinity" styleClass="sidebar-button" onAction="#handleBooksButtonClick"/>
-            <Button text="Reports" fx:id="reportsButton" maxWidth="Infinity" styleClass="sidebar-button" onAction="#handleReportsButtonClick"/>
+            <Button text="Reserve Book" fx:id="reserveButton" maxWidth="Infinity" styleClass="sidebar-button" onAction="#handleReserveButtonClick"/>
+            <Button text="Borrow Book" fx:id="borrowButton" maxWidth="Infinity" styleClass="sidebar-button" onAction="#handleBorrowButtonClick"/>
             <Button text="Settings" fx:id="settingsButton" maxWidth="Infinity" styleClass="sidebar-button" onAction="#handleSettingsButtonClick"/>
             <Button text="Logout" fx:id="logoutButton" maxWidth="Infinity" styleClass="sidebar-button" onAction="#handleLogoutButtonClick"/>
         </VBox>

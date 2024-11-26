@@ -17,7 +17,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
@@ -86,7 +85,7 @@ public class UserRegistrationController {
 
     private String registerUser(String firstName, String lastName, String username, String email, String password, Set<Role> roles) {
         // Validate input
-        if (!validateInput(firstName, lastName, username, email, password)) {
+        if (!userDataHandler.isValidInput(firstName, lastName, username, email, password)) {
             return "Invalid input: Ensure all fields are filled correctly.";
         }
 
@@ -103,13 +102,6 @@ public class UserRegistrationController {
         return isSuccess ? "User registered successfully." : "Registration failed.";
     }
 
-    private boolean validateInput(String firstName, String lastName, String username, String email, String password) {
-        if (firstName == null || firstName.trim().isEmpty()) return false;
-        if (lastName == null || lastName.trim().isEmpty()) return false;
-        if (username == null || username.trim().isEmpty()) return false;
-        if (email == null || !email.matches("^[\\w.%+-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$")) return false;
-        return password != null && !password.trim().isEmpty();
-    }
 
     @FXML
     public void showLogin() {
