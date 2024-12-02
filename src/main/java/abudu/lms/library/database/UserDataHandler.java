@@ -39,9 +39,13 @@ public class UserDataHandler {
      */
     public User getUserByEmail(String email) {
         final String query = "SELECT id, first_name, last_name, username, email, password, created_at, role FROM users WHERE email = ?";
-        try (ResultSet resultSet = dbHandler.executeQuery(query, email)) {
-            if (resultSet.next()) {
-                return mapResultSetToUser(resultSet);
+        try (Connection connection = dbHandler.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, email);
+            try (ResultSet resultSet = stmt.executeQuery()) {
+                if (resultSet.next()) {
+                    return mapResultSetToUser(resultSet);
+                }
             }
         } catch (SQLException e) {
             Logger.getLogger(UserDataHandler.class.getName())

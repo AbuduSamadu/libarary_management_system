@@ -25,6 +25,7 @@ public class Dashboard extends Application {
             UserSession userSession = UserSession.getInstance();
             String username = (userSession.getCurrentUser() != null) ? userSession.getCurrentUser().getName() : "Guest";
 
+
             DashboardController controller = loader.getController();
             controller.setUsernameLabel(username);
             controller.setLogoutButtonText(userSession.getCurrentUser() != null ? "Logout" : "Login");

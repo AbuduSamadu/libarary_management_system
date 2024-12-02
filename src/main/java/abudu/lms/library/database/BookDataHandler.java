@@ -24,10 +24,6 @@ public class BookDataHandler {
             public void deleteBook(int bookId) {
             }
 
-            @Override
-            public Book getBookByIsbn(int bookIsbn) {
-                return null;
-            }
 
             @Override
             public Book getBookById(int bookId) {
@@ -39,10 +35,6 @@ public class BookDataHandler {
                 return List.of();
             }
 
-            @Override
-            public List<Book> searchBooks(String query) {
-                return List.of();
-            }
 
             @Override
             public boolean returnBook(int id) {
@@ -57,6 +49,11 @@ public class BookDataHandler {
             @Override
             public int countBooks() {
                 return 0;
+            }
+
+            @Override
+            public void reserveBook(int id) {
+
             }
 
 

@@ -9,9 +9,10 @@ import java.util.logging.Logger;
 public class DatabaseHandler {
     private static final Logger LOGGER = Logger.getLogger(DatabaseHandler.class.getName());
     private static final Dotenv dotenv = Dotenv.load();
-    private static final String DB_URL = "jdbc:postgresql://localhost:5432/library";
-    private static final String DB_USER = "postgres";
-    private static final String DB_PASSWORD = "Abudu?0248";
+    private static final String DB_URL = dotenv.get("DB_URL");
+    private static final String DB_USER = dotenv.get("DB_USER");
+    private static final String DB_PASSWORD = dotenv.get("DB_PASSWORD");
+
 
     private Connection connection;
 

@@ -122,11 +122,6 @@ public class BookRepositoryImpl implements BookRepository {
         }
     }
 
-    @Override
-    public Book getBookByIsbn(int bookIsbn) {
-        // Implement this method if needed
-        return null;
-    }
 
     @Override
     public Book getBookById(int bookId) {
@@ -144,11 +139,6 @@ public class BookRepositoryImpl implements BookRepository {
         return books;
     }
 
-    @Override
-    public List<Book> searchBooks(String query) {
-        // Implement this method if needed
-        return List.of();
-    }
 
     @Override
     public boolean returnBook(int id) {
@@ -164,6 +154,12 @@ public class BookRepositoryImpl implements BookRepository {
         if (book == null || !book.isAvailable()) {
             return false;
         }
+
+        int newQuantity = book.getQuantity() - 1;
+        boolean isAvailable = newQuantity > 0;
+        book.setQuantity(newQuantity);
+        book.setAvailable(isAvailable);
+        updateBook(book);
 
         String query = "UPDATE books SET available = false WHERE id = ?";
         String insertBorrowing = "INSERT INTO borrowings (title, author, isbn, user_id, borrow_date, notes, active) VALUES (?, ?, ?, ?, CURRENT_DATE, '', true)";
@@ -202,5 +198,28 @@ public class BookRepositoryImpl implements BookRepository {
             Logger.getLogger(BookRepositoryImpl.class.getName()).log(Level.SEVERE, "An error occurred while counting books in the database", e);
         }
         return 0;
+    }
+
+    @Override
+    public void reserveBook(int id) {
+
+        Book book = getBookById(id);
+        if (book == null || !book.isAvailable()) {
+            return;
+        }
+        int newQuantity = book.getQuantity() - 1;
+        book.setQuantity(newQuantity);
+        book.setAvailable(newQuantity > 0);
+        updateBook(book);
+
+        // Implement this method if needed
+        String query = "UPDATE books SET reserved = true WHERE id = ?";
+        try (Connection conn = dbHandler.getConnection();
+             PreparedStatement statement = conn.prepareStatement(query)) {
+            statement.setInt(1, id);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            Logger.getLogger(BookRepositoryImpl.class.getName()).log(Level.SEVERE, "An error occurred while reserving a book", e);
+        }
     }
 }

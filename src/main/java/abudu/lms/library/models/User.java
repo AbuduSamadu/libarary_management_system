@@ -16,26 +16,26 @@ public class User {
 
     /**
      * Constructor for the User class.
-     * @param id The id of the user.
+     *
+     * @param id        The id of the user.
      * @param firstName The first name of the user.
-     * @param lastName The last name of the user.
-     * @param username The username of the user.
-     * @param email The email of the user.
-     * @param password The password of the user.
+     * @param lastName  The last name of the user.
+     * @param username  The username of the user.
+     * @param email     The email of the user.
+     * @param password  The password of the user.
      * @param createdAt The date and time the user was created.
-     * @param roles The roles of the user.
+     * @param roles     The roles of the user.
      */
 
     public User(
             int id,
-                String firstName,
-                String lastName,
-                String username,
-                String email,
-                String password,
-                LocalDateTime createdAt,
-                Set<Role> roles)
-    {
+            String firstName,
+            String lastName,
+            String username,
+            String email,
+            String password,
+            LocalDateTime createdAt,
+            Set<Role> roles) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -109,5 +109,19 @@ public class User {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", role='" + roles + '\'' +
+                ", createdAt='" + createdAt + '\'' +
+                '}';
     }
 }

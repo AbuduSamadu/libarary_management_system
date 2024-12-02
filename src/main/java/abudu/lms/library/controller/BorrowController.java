@@ -5,7 +5,6 @@ import abudu.lms.library.models.User;
 import abudu.lms.library.repository.BorrowingRepositoryImpl;
 import abudu.lms.library.security.AccessControl;
 import abudu.lms.library.utils.UserSession;
-import javafx.collections.FXCollections;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,7 +13,6 @@ import javafx.scene.control.*;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -322,6 +320,7 @@ public class BorrowController {
         UserSession userSession = UserSession.getInstance();
         User currentUser = userSession.getCurrentUser();
         if (currentUser != null && !AccessControl.hasRole(currentUser, "librarian")) {
+            System.out.println("User Role" + currentUser.getRoles());
             borrowButton.setVisible(false);
         }
     }

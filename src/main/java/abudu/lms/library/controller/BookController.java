@@ -89,6 +89,7 @@ public class BookController {
                 reserveButton.setOnAction(event -> {
                     Book book = getTableView().getItems().get(getIndex());
                     // Handle reserve action
+                    handleReserveBook(book);
                 });
 
                 borrowButton.setOnAction(event -> {
@@ -152,7 +153,7 @@ public class BookController {
             return;
         }
 
-        Book book = new Book(0, title, author, publisher, year, (int) isbn, true, category, quantity, description, 15);
+        Book book = new Book(0, title, author, publisher, year, (int) isbn, true, category, quantity, description, userId);
         try {
             bookRepository.addBook(book);
             showAlert(Alert.AlertType.INFORMATION, "Success", "Book added successfully.");
@@ -360,9 +361,9 @@ public class BookController {
     private void checkUserRole() {
         UserSession userSession = UserSession.getInstance();
         User currentUser = userSession.getCurrentUser();
-        if (currentUser != null && !AccessControl.hasRole(currentUser, "librarian")) {
-            addBookButton.setVisible(false);
-        }
+//        if (currentUser != null && !AccessControl.hasRole(currentUser, "librarian")) {
+//            addBookButton.setVisible(false);
+//        }
     }
 
     @FXML
@@ -394,7 +395,8 @@ public class BookController {
 
     @FXML
     private void handleBorrowBook(Book book) {
-        if (UserSession.getInstance().getCurrentUser() == null) {
+        User currentUser = UserSession.getInstance().getCurrentUser();
+        if (currentUser == null) {
             showAlert(Alert.AlertType.ERROR, "Authentication Required", "You must be logged in to borrow a book.");
             return;
         }
@@ -404,7 +406,7 @@ public class BookController {
             return;
         }
 
-        long userId = UserSession.getInstance().getCurrentUser().getId();
+        long userId = currentUser.getId();
         if (userId <= 0) {
             showAlert(Alert.AlertType.ERROR, "Invalid User", "The logged in user is invalid.");
             return;
@@ -418,4 +420,51 @@ public class BookController {
             showAlert(Alert.AlertType.ERROR, "Error", "Failed to borrow book.");
         }
     }
+
+    @FXML
+    private void handleReturnBook(Book book) {
+        User currentUser = UserSession.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            showAlert(Alert.AlertType.ERROR, "Authentication Required", "You must be logged in to return a book.");
+            return;
+        }
+
+        long userId = currentUser.getId();
+        if (userId <= 0) {
+            showAlert(Alert.AlertType.ERROR, "Invalid User", "The logged in user is invalid.");
+            return;
+        }
+
+        try {
+            bookRepository.returnBook(book.getId());
+            showAlert(Alert.AlertType.INFORMATION, "Success", "Book returned successfully.");
+            refreshTable();
+        } catch (Exception e) {
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to return book.");
+        }
+    }
+
+    @FXML
+    private void handleReserveBook(Book book) {
+        User currentUser = UserSession.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            showAlert(Alert.AlertType.ERROR, "Authentication Required", "You must be logged in to reserve a book.");
+            return;
+        }
+
+        long userId = currentUser.getId();
+        if (userId <= 0) {
+            showAlert(Alert.AlertType.ERROR, "Invalid User", "The logged in user is invalid.");
+            return;
+        }
+        try {
+            bookRepository.reserveBook(book.getId());
+            showAlert(Alert.AlertType.INFORMATION, "Success", "Book reserved successfully.");
+            refreshTable();
+        } catch (Exception e) {
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to reserve book.");
+        }
+    }
+
+
 }

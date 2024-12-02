@@ -13,17 +13,19 @@ public interface BookRepository {
     void addBook(Book book);
     void updateBook(Book book);
     void deleteBook(int bookId);
-    Book getBookByIsbn(int bookIsbn);
 
     Book getBookById(int bookId);
 
     List<Book> getAllBooks();
-    List<Book> searchBooks(String query);
 
     boolean returnBook(int id);
 ;
 
     boolean borrowBook(int bookId);
 
+
+
     int countBooks();
+
+    void reserveBook(int id);
 }

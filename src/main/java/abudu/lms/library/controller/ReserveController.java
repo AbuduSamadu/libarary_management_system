@@ -1,11 +1,11 @@
 package abudu.lms.library.controller;
 
+import abudu.lms.library.database.UserDataHandler;
 import abudu.lms.library.models.Reservation;
 import abudu.lms.library.models.User;
 import abudu.lms.library.repository.ReservationRepositoryImpl;
 import abudu.lms.library.security.AccessControl;
 import abudu.lms.library.utils.UserSession;
-import javafx.collections.FXCollections;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,7 +14,6 @@ import javafx.scene.control.*;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -321,7 +320,9 @@ public class ReserveController {
     private void checkUserRole() {
         UserSession userSession = UserSession.getInstance();
         User currentUser = userSession.getCurrentUser();
-        if (currentUser != null && !AccessControl.hasRole(currentUser, "librarian")) {
+        System.out.print("UserRole" + currentUser.getRoles());
+
+        if (currentUser.getRoles() != null && !AccessControl.hasRole(currentUser, "librarian")) {
             reserveButton.setVisible(false);
         }
     }
