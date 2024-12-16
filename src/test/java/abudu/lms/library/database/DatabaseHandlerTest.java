@@ -15,13 +15,12 @@ class DatabaseHandlerTest {
     private DatabaseHandler databaseHandler;
     private Connection mockConnection;
     private PreparedStatement mockStatement;
-    private ResultSet mockResultSet;
 
     @BeforeEach
     void setUp() throws SQLException {
         mockStatement = mock(PreparedStatement.class);
         mockConnection = mock(Connection.class);
-        mockResultSet = mock(ResultSet.class);
+        ResultSet mockResultSet = mock(ResultSet.class);
 
 
         when(mockConnection.prepareStatement(any(String.class))).thenReturn(mockStatement);

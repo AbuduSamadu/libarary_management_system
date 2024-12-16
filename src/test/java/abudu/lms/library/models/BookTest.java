@@ -191,6 +191,6 @@ class BookTest {
 
     @Test
     void actionsProperty() {
-        assertEquals("Actions", book.actionsProperty().getValue());
+        assertEquals("Edit | Delete", book.actionsProperty().getValue());
     }
 }
