@@ -265,10 +265,7 @@ public class BookController {
     private void handleImport() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Import Books");
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("CSV Files", "*.csv"),
-                new FileChooser.ExtensionFilter("All Files", "*.*")
-        );
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("CSV Files", "*.csv"), new FileChooser.ExtensionFilter("All Files", "*.*"));
         File selectedFile = fileChooser.showOpenDialog(null);
         if (selectedFile != null) {
             importBooksFromFile(selectedFile);
@@ -348,11 +345,7 @@ public class BookController {
         if (query == null || query.isEmpty()) {
             resourcesTable.getItems().setAll(books);
         } else {
-            List<Book> filteredBooks = books.stream()
-                    .filter(book -> book.getTitle().toLowerCase().contains(query.toLowerCase()) ||
-                            book.getAuthor().toLowerCase().contains(query.toLowerCase()) ||
-                            String.valueOf(book.getIsbn()).contains(query))
-                    .collect(Collectors.toList());
+            List<Book> filteredBooks = books.stream().filter(book -> book.getTitle().toLowerCase().contains(query.toLowerCase()) || book.getAuthor().toLowerCase().contains(query.toLowerCase()) || String.valueOf(book.getIsbn()).contains(query)).collect(Collectors.toList());
             resourcesTable.getItems().setAll(filteredBooks);
         }
         updateStatusLabels(resourcesTable.getItems());

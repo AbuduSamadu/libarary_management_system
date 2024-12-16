@@ -1,6 +1,5 @@
 package abudu.lms.library.controller;
 
-import abudu.lms.library.database.UserDataHandler;
 import abudu.lms.library.models.Reservation;
 import abudu.lms.library.models.User;
 import abudu.lms.library.repository.ReservationRepositoryImpl;
@@ -18,7 +17,10 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;

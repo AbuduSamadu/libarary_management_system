@@ -14,18 +14,6 @@ public class User {
     private LocalDateTime createdAt;
     private Set<Role> roles;
 
-    /**
-     * Constructor for the User class.
-     *
-     * @param id        The id of the user.
-     * @param firstName The first name of the user.
-     * @param lastName  The last name of the user.
-     * @param username  The username of the user.
-     * @param email     The email of the user.
-     * @param password  The password of the user.
-     * @param createdAt The date and time the user was created.
-     * @param roles     The roles of the user.
-     */
 
     public User(
             int id,

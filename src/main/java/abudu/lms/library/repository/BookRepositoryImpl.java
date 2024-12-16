@@ -147,7 +147,6 @@ public class BookRepositoryImpl implements BookRepository {
     }
 
 
-
     @Override
     public boolean borrowBook(int bookId) {
         Book book = getBookById(bookId);

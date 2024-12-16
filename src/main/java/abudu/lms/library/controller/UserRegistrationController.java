@@ -1,14 +1,5 @@
 package abudu.lms.library.controller;
 
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.mindrot.jbcrypt.BCrypt;
-
 import abudu.lms.library.database.UserDataHandler;
 import abudu.lms.library.models.ERole;
 import abudu.lms.library.models.Role;
@@ -21,28 +12,30 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import org.mindrot.jbcrypt.BCrypt;
+
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class UserRegistrationController {
 
+    private final UserDataHandler userDataHandler;
     @FXML
     private TextField firstNameField;
-
     @FXML
     private TextField lastNameField;
-
     @FXML
     private TextField usernameField;
-
     @FXML
     private TextField emailField;
-
     @FXML
     private TextField passwordField;
-
     @FXML
     private ComboBox<Role> roleComboBox;
-
-    private final UserDataHandler userDataHandler;
 
     public UserRegistrationController() {
         this.userDataHandler = new UserDataHandler();

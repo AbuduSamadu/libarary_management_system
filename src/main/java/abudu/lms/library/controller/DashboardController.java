@@ -12,7 +12,9 @@ import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.PieChart;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
@@ -96,7 +98,7 @@ public class DashboardController {
 
     @FXML
     private void initialize() {
-      updateUserSessionUI();
+        updateUserSessionUI();
     }
 
 
@@ -128,6 +130,7 @@ public class DashboardController {
     private void handleSettingsButtonClick() {
         // Handle settings button click
     }
+
     public void setUsernameLabel(String username) {
         usernameLabel.setText("Welcome, " + username);
     }
@@ -149,10 +152,10 @@ public class DashboardController {
 
     private void showLoginDialog() {
         try {
-         loadScene("/abudu/lms/library/login.fxml", "Login", 400, 300);
+            loadScene("/abudu/lms/library/login.fxml", "Login", 400, 300);
 
             // After login dialog is closed, update the username and button text
-           updateUserSessionUI();
+            updateUserSessionUI();
 
         } catch (IOException e) {
             Logger.getLogger(DashboardController.class.getName()).log(Level.SEVERE, "Error loading login dialog", e);
@@ -172,15 +175,13 @@ public class DashboardController {
     }
 
 
-
     public void handleReserveButtonClick(ActionEvent actionEvent) throws IOException {
-        loadScene("/abudu/lms/library/reserve.fxml", "Reserve Book",1080, 720);
+        loadScene("/abudu/lms/library/reserve.fxml", "Reserve Book", 1080, 720);
     }
 
     public void handleBorrowButtonClick(ActionEvent actionEvent) throws IOException {
-        loadScene("/abudu/lms/library/borrow.fxml", "Borrow Book",1080, 720);
+        loadScene("/abudu/lms/library/borrow.fxml", "Borrow Book", 1080, 720);
     }
-
 
 
     private void loadScene(String fxmlPath, String title) throws IOException {

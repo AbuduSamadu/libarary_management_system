@@ -5,16 +5,10 @@ public class Role {
     private ERole name;
 
 
-    /**
-     * Constructor for the Role class.
-     * @param id The id of the role.
-     * @param name The name of the role.
-     */
     public Role(int id, ERole name) {
         this.id = id;
         this.name = name;
     }
-
 
     // Getters and setters
     public int getId() {
@@ -32,9 +26,10 @@ public class Role {
     public void setName(ERole name) {
         this.name = name;
     }
+
     @Override
     public String toString() {
-       return name.toString();
+        return name.toString();
     }
 
 }
