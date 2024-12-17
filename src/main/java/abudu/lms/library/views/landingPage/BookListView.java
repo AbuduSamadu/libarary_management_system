@@ -2,6 +2,7 @@ package abudu.lms.library.views.landingPage;
 
 import abudu.lms.library.database.BookDataHandler;
 import abudu.lms.library.models.Book;
+import abudu.lms.library.repository.BookRepository;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -16,8 +17,13 @@ public class BookListView {
 
     private final BookDataHandler bookDataHandler;
 
-    public BookListView() {
-        this.bookDataHandler = new BookDataHandler();
+    public BookListView(BookRepository bookRepository) {
+        this.bookDataHandler = new BookDataHandler(bookRepository) {
+            @Override
+            public BookRepository getBookRepository() {
+                return null;
+            }
+        };
     }
 
     public void show(Stage primaryStage) {

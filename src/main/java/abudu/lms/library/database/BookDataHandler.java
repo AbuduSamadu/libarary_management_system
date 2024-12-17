@@ -1,64 +1,18 @@
 package abudu.lms.library.database;
 
-import java.util.List;
-
 import abudu.lms.library.models.Book;
-
 import abudu.lms.library.repository.BookRepository;
 
-public class BookDataHandler {
+import java.util.List;
+
+public abstract class BookDataHandler {
 
     private final BookRepository bookRepository;
 
-    public BookDataHandler() {
-        this.bookRepository = new BookRepository() {
-            @Override
-            public void addBook(Book book) {
-            }
-
-            @Override
-            public void updateBook(Book book) {
-            }
-
-            @Override
-            public void deleteBook(int bookId) {
-            }
-
-
-            @Override
-            public Book getBookById(int bookId) {
-                return null;
-            }
-
-            @Override
-            public List<Book> getAllBooks() {
-                return List.of();
-            }
-
-
-            @Override
-            public boolean returnBook(int id) {
-                return false;
-            }
-
-            @Override
-            public boolean borrowBook(int bookId) {
-                return false;
-            }
-
-            @Override
-            public int countBooks() {
-                return 0;
-            }
-
-            @Override
-            public void reserveBook(int id) {
-
-            }
-
-
-        };
+    public BookDataHandler(BookRepository bookRepository) {
+        this.bookRepository = bookRepository;
     }
+
 
     public void addBook(Book book) {
         bookRepository.addBook(book);
@@ -86,11 +40,13 @@ public class BookDataHandler {
     }
 
     public boolean borrowBook(int id) {
-        return bookRepository.borrowBook(id );
+        return bookRepository.borrowBook(id);
     }
 
     public int generateNewId() {
         List<Book> books = bookRepository.getAllBooks();
         return books.size() + 1;
     }
+
+    public abstract BookRepository getBookRepository();
 }
