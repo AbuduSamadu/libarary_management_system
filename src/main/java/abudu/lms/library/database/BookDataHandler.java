@@ -43,9 +43,8 @@ public abstract class BookDataHandler {
         return bookRepository.borrowBook(id);
     }
 
-    public int generateNewId() {
+    public void generateNewId() {
         List<Book> books = bookRepository.getAllBooks();
-        return books.size() + 1;
     }
 
     public abstract BookRepository getBookRepository();
