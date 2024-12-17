@@ -10,7 +10,7 @@ public class UserSession {
     private User currentUser;
     private LocalDateTime lastAccessTime;
 
-    private UserSession() {
+    public UserSession() {
         // Private constructor to prevent instantiation
     }
 
@@ -23,6 +23,10 @@ public class UserSession {
             }
         }
         return instance;
+    }
+
+    public static void setInstance(UserSession mockSession) {
+        
     }
 
     public void setCurrentUser(User user) {

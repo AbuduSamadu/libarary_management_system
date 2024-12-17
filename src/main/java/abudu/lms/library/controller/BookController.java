@@ -122,7 +122,7 @@ public class BookController {
     }
 
     @FXML
-    private void handleAddResource() {
+    void handleAddResource() {
         if (UserSession.getInstance().getCurrentUser() == null) {
             showAlert(Alert.AlertType.ERROR, "Authentication Required", "You must be logged in to add a book.");
             return;
