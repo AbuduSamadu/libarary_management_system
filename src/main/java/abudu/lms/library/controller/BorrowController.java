@@ -17,7 +17,10 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -26,24 +29,31 @@ import java.util.stream.Collectors;
 
 public class BorrowController {
 
+    private final BorrowingRepositoryImpl borrowingRepository;
+    @FXML
+    TextField authorField;
     @FXML
     private Button homeButton, borrowButton;
     @FXML
-    private TableView<Borrowing> borrowingsTable;
+    TableView<Borrowing> borrowingsTable;
     @FXML
-    private TextField titleField, authorField, isbnField, userIdField, searchField;
+    TextField titleField;
     @FXML
-    private DatePicker borrowDatePicker;
+    TextField isbnField;
     @FXML
-    private TextArea notesArea;
+    TextField userIdField;
+    @FXML
+    TextField searchField;
+    @FXML
+    DatePicker borrowDatePicker;
+    @FXML
+    TextArea notesArea;
     @FXML
     private TableColumn<Borrowing, Integer> idColumn;
     @FXML
     private TableColumn<Borrowing, String> titleColumn, authorColumn, isbnColumn, userIdColumn, notesColumn, borrowDateColumn, actionsColumn;
     @FXML
     private Label statusLabel, totalBorrowingsLabel, activeBorrowingsLabel, completedBorrowingsLabel;
-
-    private final BorrowingRepositoryImpl borrowingRepository;
 
     public BorrowController() {
         this.borrowingRepository = new BorrowingRepositoryImpl();
@@ -102,7 +112,7 @@ public class BorrowController {
     }
 
     @FXML
-    private void handleBorrowBook() {
+    void handleBorrowBook() {
         if (UserSession.getInstance().getCurrentUser() == null) {
             showAlert(Alert.AlertType.ERROR, "Authentication Required", "You must be logged in to borrow a book.");
             return;

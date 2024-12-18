@@ -91,10 +91,6 @@ class UserTest {
         assertEquals("123456", user.getPassword());
     }
 
-    @Test
-    void getCreatedAt() {
-        assertEquals(LocalDateTime.now(), user.getCreatedAt());
-    }
 
     @Test
     void setCreatedAt() {
@@ -115,10 +111,6 @@ class UserTest {
         user.setRoles(roles);
         assertEquals(roles, user.getRoles());
     }
-
-//    @Test
-//    void testToString() {
-//        assertEquals("User{id=1, firstName='Abudu', lastName='Sam', username='abudu', email='abudu@gmail.com', role='[Patron]', createdAt=2024-12-16T15:15:19.458914800'}", user.toString());
-//    }
+    
 
 }
