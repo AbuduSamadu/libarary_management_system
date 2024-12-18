@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 
 public class ReserveController {
 
+    private final ReservationRepositoryImpl reservationRepository;
     @FXML
     private Button homeButton, reserveButton;
     @FXML
@@ -45,8 +46,6 @@ public class ReserveController {
     private TableColumn<Reservation, String> titleColumn, authorColumn, isbnColumn, userIdColumn, notesColumn, reservationDateColumn, actionsColumn;
     @FXML
     private Label statusLabel, totalReservationsLabel, activeReservationsLabel, completedReservationsLabel;
-
-    private final ReservationRepositoryImpl reservationRepository;
 
     public ReserveController() {
         this.reservationRepository = new ReservationRepositoryImpl();
@@ -105,7 +104,7 @@ public class ReserveController {
     }
 
     @FXML
-    private void handleReserveBook() {
+    void handleReserveBook() {
         if (UserSession.getInstance().getCurrentUser() == null) {
             showAlert(Alert.AlertType.ERROR, "Authentication Required", "You must be logged in to reserve a book.");
             return;

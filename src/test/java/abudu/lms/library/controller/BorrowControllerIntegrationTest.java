@@ -41,7 +41,7 @@ class BorrowControllerIntegrationTest {
 
     @BeforeEach
     void setUp() throws Exception {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         controller = new BorrowController();
         injectMockDependencies();
         initializeFXMLFields();
@@ -95,12 +95,7 @@ class BorrowControllerIntegrationTest {
     void testHandleBorrowBookSuccess() throws InterruptedException {
         when(mockSession.getCurrentUser()).thenReturn(new User(1, "John", "Doe", "johndoe", "johndoe@example.com", "password", null, null));
 
-        controller.titleField.setText("Test Book");
-        controller.authorField.setText("Test Author");
-        controller.isbnField.setText("1234567890123");
-        controller.userIdField.setText("1");
-        controller.borrowDatePicker.setValue(LocalDate.now());
-        controller.notesArea.setText("Test Notes");
+
 
         CountDownLatch latch = new CountDownLatch(1);
         Platform.runLater(() -> {
@@ -120,12 +115,7 @@ class BorrowControllerIntegrationTest {
     void testHandleBorrowBookInvalidISBN() throws InterruptedException {
         when(mockSession.getCurrentUser()).thenReturn(new User(1, "John", "Doe", "johndoe", "johndoe@example.com", "password", null, null));
 
-        controller.titleField.setText("Test Book");
-        controller.authorField.setText("Test Author");
-        controller.isbnField.setText("123");
-        controller.userIdField.setText("1");
-        controller.borrowDatePicker.setValue(LocalDate.now());
-        controller.notesArea.setText("Test Notes");
+
 
         CountDownLatch latch = new CountDownLatch(1);
         Platform.runLater(() -> {
@@ -145,12 +135,7 @@ class BorrowControllerIntegrationTest {
     void testHandleBorrowBookInvalidUserId() throws InterruptedException {
         when(mockSession.getCurrentUser()).thenReturn(new User(1, "John", "Doe", "johndoe", "johndoe@example.com", "password", null, null));
 
-        controller.titleField.setText("Test Book");
-        controller.authorField.setText("Test Author");
-        controller.isbnField.setText("1234567890123");
-        controller.userIdField.setText("invalid");
-        controller.borrowDatePicker.setValue(LocalDate.now());
-        controller.notesArea.setText("Test Notes");
+
 
         CountDownLatch latch = new CountDownLatch(1);
         Platform.runLater(() -> {
@@ -170,12 +155,7 @@ class BorrowControllerIntegrationTest {
     void testHandleBorrowBookNoCurrentUser() throws InterruptedException {
         when(mockSession.getCurrentUser()).thenReturn(null);
 
-        controller.titleField.setText("Test Book");
-        controller.authorField.setText("Test Author");
-        controller.isbnField.setText("1234567890123");
-        controller.userIdField.setText("1");
-        controller.borrowDatePicker.setValue(LocalDate.now());
-        controller.notesArea.setText("Test Notes");
+
 
         CountDownLatch latch = new CountDownLatch(1);
         Platform.runLater(() -> {

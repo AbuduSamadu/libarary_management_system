@@ -1,5 +1,6 @@
 package abudu.lms.library.controller;
 
+
 import abudu.lms.library.models.Borrowing;
 import abudu.lms.library.models.User;
 import abudu.lms.library.repository.BorrowingRepositoryImpl;
@@ -30,24 +31,25 @@ import java.util.stream.Collectors;
 public class BorrowController {
 
     private final BorrowingRepositoryImpl borrowingRepository;
+
     @FXML
-    TextField authorField;
+    private TextField authorField;
+    @FXML
+    private TableView<Borrowing> borrowingsTable;
+    @FXML
+    private TextField titleField;
+    @FXML
+    private TextField isbnField;
+    @FXML
+    private TextField userIdField;
+    @FXML
+    private TextField searchField;
+    @FXML
+    private DatePicker borrowDatePicker;
+    @FXML
+    private TextArea notesArea;
     @FXML
     private Button homeButton, borrowButton;
-    @FXML
-    TableView<Borrowing> borrowingsTable;
-    @FXML
-    TextField titleField;
-    @FXML
-    TextField isbnField;
-    @FXML
-    TextField userIdField;
-    @FXML
-    TextField searchField;
-    @FXML
-    DatePicker borrowDatePicker;
-    @FXML
-    TextArea notesArea;
     @FXML
     private TableColumn<Borrowing, Integer> idColumn;
     @FXML
