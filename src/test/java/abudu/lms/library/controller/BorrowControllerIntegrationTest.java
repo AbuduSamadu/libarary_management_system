@@ -1,10 +1,9 @@
-﻿package abudu.lms.library.controller;
+package abudu.lms.library.controller;
 
 import abudu.lms.library.models.Borrowing;
 import abudu.lms.library.models.User;
 import abudu.lms.library.repository.BorrowingRepositoryImpl;
 import abudu.lms.library.utils.UserSession;
-import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableView;
@@ -33,6 +32,7 @@ class BorrowControllerIntegrationTest {
     @Mock
     private UserSession mockSession;
     private BorrowController controller;
+    private Object Platform;
 
     @BeforeAll
     void initJFX() {
@@ -95,18 +95,17 @@ class BorrowControllerIntegrationTest {
     void testHandleBorrowBookSuccess() throws InterruptedException {
         when(mockSession.getCurrentUser()).thenReturn(new User(1, "John", "Doe", "johndoe", "johndoe@example.com", "password", null, null));
 
-
+        controller.titleField.setText("Test Book");
+        controller.authorField.setText("Test Author");
+        controller.isbnField.setText("1234567890123");
+        controller.userIdField.setText("1");
+        controller.borrowDatePicker.setValue(LocalDate.now());
+        controller.notesArea.setText("Test Notes");
 
         CountDownLatch latch = new CountDownLatch(1);
-        Platform.runLater(() -> {
-            try {
-                controller.handleBorrowBook();
-            } finally {
-                latch.countDown();
-            }
-        });
+        controller.handleBorrowBook();
 
-        assertTrue(latch.await(10, TimeUnit.SECONDS), "Borrow book process should complete");
+        assertTrue(latch.await(5, TimeUnit.SECONDS), "Borrow book process should complete");
 
         verify(mockBorrowingRepository).addBorrowing(any(Borrowing.class));
     }
@@ -115,18 +114,17 @@ class BorrowControllerIntegrationTest {
     void testHandleBorrowBookInvalidISBN() throws InterruptedException {
         when(mockSession.getCurrentUser()).thenReturn(new User(1, "John", "Doe", "johndoe", "johndoe@example.com", "password", null, null));
 
-
+        controller.titleField.setText("Test Book");
+        controller.authorField.setText("Test Author");
+        controller.isbnField.setText("123");
+        controller.userIdField.setText("1");
+        controller.borrowDatePicker.setValue(LocalDate.now());
+        controller.notesArea.setText("Test Notes");
 
         CountDownLatch latch = new CountDownLatch(1);
-        Platform.runLater(() -> {
-            try {
-                controller.handleBorrowBook();
-            } finally {
-                latch.countDown();
-            }
-        });
+        controller.handleBorrowBook();
 
-        assertTrue(latch.await(10, TimeUnit.SECONDS), "Borrow book process should complete");
+        assertTrue(latch.await(5, TimeUnit.SECONDS), "Borrow book process should complete");
 
         verify(mockBorrowingRepository, never()).addBorrowing(any(Borrowing.class));
     }
@@ -135,18 +133,17 @@ class BorrowControllerIntegrationTest {
     void testHandleBorrowBookInvalidUserId() throws InterruptedException {
         when(mockSession.getCurrentUser()).thenReturn(new User(1, "John", "Doe", "johndoe", "johndoe@example.com", "password", null, null));
 
-
+        controller.titleField.setText("Test Book");
+        controller.authorField.setText("Test Author");
+        controller.isbnField.setText("1234567890123");
+        controller.userIdField.setText("invalid");
+        controller.borrowDatePicker.setValue(LocalDate.now());
+        controller.notesArea.setText("Test Notes");
 
         CountDownLatch latch = new CountDownLatch(1);
-        Platform.runLater(() -> {
-            try {
-                controller.handleBorrowBook();
-            } finally {
-                latch.countDown();
-            }
-        });
+        controller.handleBorrowBook();
 
-        assertTrue(latch.await(10, TimeUnit.SECONDS), "Borrow book process should complete");
+        assertTrue(latch.await(5, TimeUnit.SECONDS), "Borrow book process should complete");
 
         verify(mockBorrowingRepository, never()).addBorrowing(any(Borrowing.class));
     }
@@ -155,18 +152,17 @@ class BorrowControllerIntegrationTest {
     void testHandleBorrowBookNoCurrentUser() throws InterruptedException {
         when(mockSession.getCurrentUser()).thenReturn(null);
 
-
+        controller.titleField.setText("Test Book");
+        controller.authorField.setText("Test Author");
+        controller.isbnField.setText("1234567890123");
+        controller.userIdField.setText("1");
+        controller.borrowDatePicker.setValue(LocalDate.now());
+        controller.notesArea.setText("Test Notes");
 
         CountDownLatch latch = new CountDownLatch(1);
-        Platform.runLater(() -> {
-            try {
-                controller.handleBorrowBook();
-            } finally {
-                latch.countDown();
-            }
-        });
+        controller.handleBorrowBook();
 
-        assertTrue(latch.await(10, TimeUnit.SECONDS), "Borrow book process should complete");
+        assertTrue(latch.await(5, TimeUnit.SECONDS), "Borrow book process should complete");
 
         verify(mockBorrowingRepository, never()).addBorrowing(any(Borrowing.class));
     }

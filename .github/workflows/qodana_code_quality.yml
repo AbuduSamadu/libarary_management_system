@@ -10,16 +10,13 @@ on:
 jobs:
   qodana:
     runs-on: ubuntu-latest
-<<<<<<< HEAD
     strategy:
       matrix:
         jdk: [ 23 ]
-=======
     permissions:
       contents: write
       pull-requests: write
       checks: write
->>>>>>> 4ae4636f28ff71f57de07b99d093505363ac16bc
     steps:
       - uses: actions/checkout@v3
         with:

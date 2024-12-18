@@ -33,21 +33,23 @@ public class BorrowController {
     private final BorrowingRepositoryImpl borrowingRepository;
 
     @FXML
-    private TextField authorField;
+    public TextField authorField;
     @FXML
-    private TableView<Borrowing> borrowingsTable;
+    public TableView<Borrowing> borrowingsTable;
     @FXML
-    private TextField titleField;
+    public TextField titleField;
     @FXML
-    private TextField isbnField;
+    public TextField isbnField;
     @FXML
-    private TextField userIdField;
+    public TextField userIdField;
     @FXML
-    private TextField searchField;
+    public TextField searchField;
     @FXML
-    private DatePicker borrowDatePicker;
+    public TextArea notesArea;
+
     @FXML
-    private TextArea notesArea;
+    public DatePicker borrowDatePicker;
+
     @FXML
     private Button homeButton, borrowButton;
     @FXML

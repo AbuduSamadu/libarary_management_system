@@ -93,7 +93,7 @@ public class UserRegistrationControllerIntegrationTest {
             // Select a role
             ComboBox<Role> roleComboBox = findComboBox();
             assert roleComboBox != null;
-            roleComboBox.setValue(new Role(0, ERole.ROLE_USER));
+            roleComboBox.setValue(new Role(0, ERole.Librarian));
 
             // Mock UserDataHandler methods
             when(mockUserDataHandler.isValidInput(anyString(), anyString(), anyString(), anyString(), anyString()))
@@ -114,7 +114,7 @@ public class UserRegistrationControllerIntegrationTest {
                     eq("john.doe@example.com"),
                     argThat(password -> BCrypt.checkpw("StrongPassword123!", password)),
                     any(LocalDateTime.class),
-                    argThat(roles -> roles.iterator().next().getName() == ERole.ROLE_USER)
+                    argThat(roles -> roles.iterator().next().getName() == ERole.Librarian)
             );
         });
     }
@@ -138,7 +138,7 @@ public class UserRegistrationControllerIntegrationTest {
 
             // Select a role
             ComboBox<Role> roleComboBox = findComboBox();
-            roleComboBox.setValue(new Role(0, ERole.ROLE_USER));
+            roleComboBox.setValue(new Role(0, ERole.Librarian));
 
             // Capture method invocation
             controller.registerUser();
@@ -163,7 +163,7 @@ public class UserRegistrationControllerIntegrationTest {
             // Select a role
             ComboBox<Role> roleComboBox = findComboBox();
             assert roleComboBox != null;
-            roleComboBox.setValue(new Role(0, ERole.ROLE_USER));
+            roleComboBox.setValue(new Role(0, ERole.Librarian));
 
             // Mock UserDataHandler methods
             when(mockUserDataHandler.isValidInput(anyString(), anyString(), anyString(), anyString(), anyString()))
@@ -224,7 +224,7 @@ public class UserRegistrationControllerIntegrationTest {
             // Select a role
             ComboBox<Role> roleComboBox = findComboBox();
             assert roleComboBox != null;
-            roleComboBox.setValue(new Role(0, ERole.ROLE_USER));
+            roleComboBox.setValue(new Role(0, ERole.Librarian));
 
             // Mock UserDataHandler methods
             when(mockUserDataHandler.isValidInput(anyString(), anyString(), anyString(), anyString(), anyString()))

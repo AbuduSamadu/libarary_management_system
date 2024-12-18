@@ -86,7 +86,7 @@ public class UserDataHandlerIntegrationTest {
         // Arrange
         String email = "duplicate@example.com";
         LocalDateTime createdAt = LocalDateTime.now();
-        Set<Role> roles = Set.of(new Role(ERole.ROLE_USER.ordinal(), ERole.ROLE_USER));
+        Set<Role> roles = Set.of(new Role(ERole.Librarian.ordinal(), ERole.Librarian));
 
         // First user
         userDataHandler.addUser(

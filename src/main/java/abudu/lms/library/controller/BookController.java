@@ -17,6 +17,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.jetbrains.annotations.NotNull;
 
 import javax.imageio.ImageIO;
 import java.io.*;
@@ -278,18 +279,7 @@ public class BookController {
             while ((line = reader.readLine()) != null) {
                 String[] fields = line.split(",");
                 if (fields.length == 10) {
-                    String title = fields[0];
-                    String author = fields[1];
-                    String publisher = fields[2];
-                    int year = Integer.parseInt(fields[3]);
-                    int isbn = Integer.parseInt(fields[4]);
-                    boolean available = Boolean.parseBoolean(fields[5]);
-                    String category = fields[6];
-                    int quantity = Integer.parseInt(fields[7]);
-                    String description = fields[8];
-                    long userId = Long.parseLong(fields[9]);
-
-                    Book book = new Book(0, title, author, publisher, year, isbn, available, category, quantity, description, userId);
+                    Book book = getBook(fields);
                     bookRepository.addBook(book);
                 }
             }
@@ -299,6 +289,23 @@ public class BookController {
             showAlert(Alert.AlertType.ERROR, "Error", "Failed to import books.");
             e.printStackTrace();
         }
+    }
+
+    @NotNull
+    private static Book getBook(String[] fields) {
+        String title = fields[0];
+        String author = fields[1];
+        String publisher = fields[2];
+        int year = Integer.parseInt(fields[3]);
+        int isbn = Integer.parseInt(fields[4]);
+        boolean available = Boolean.parseBoolean(fields[5]);
+        String category = fields[6];
+        int quantity = Integer.parseInt(fields[7]);
+        String description = fields[8];
+        long userId = Long.parseLong(fields[9]);
+
+        Book book = new Book(0, title, author, publisher, year, isbn, available, category, quantity, description, userId);
+        return book;
     }
 
     @FXML

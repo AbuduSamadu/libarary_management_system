@@ -16,6 +16,7 @@ module abudu.lms.library {
     requires jbcrypt;
     requires java.dotenv;
     requires javafx.swing;
+    requires annotations;
 
     opens abudu.lms.library to javafx.fxml;
     opens abudu.lms.library.controller to javafx.fxml;

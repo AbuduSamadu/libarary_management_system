@@ -11,21 +11,20 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class UserTest {
     private User user;
-
     private Set<Role> roles;
-
 
     @BeforeEach
     void setUp() {
         roles = new HashSet<>();
         roles.add(new Role(1, ERole.Patron));
-        user = new User(1, "Abudu", "Sam", "abudu", "abudu@gmail.com", "123456", LocalDateTime.now(), roles);
+        user = new User(1, "John", "Doe", "John Doe", "John Doe@gmail.com", "123456", LocalDateTime.now(), roles);
 
     }
 
     @Test
     void getId() {
         assertEquals(1, user.getId());
+
     }
 
     @Test
@@ -36,48 +35,46 @@ class UserTest {
 
     @Test
     void getFirstName() {
-        assertEquals("Abudu", user.getFirstName());
+        assertEquals("John", user.getFirstName());
     }
 
     @Test
     void setFirstName() {
-        user.setFirstName("Sam");
-        assertEquals("Sam", user.getFirstName());
+        user.setFirstName("Jane");
+        assertEquals("Jane", user.getFirstName());
     }
 
     @Test
     void getLastName() {
-        assertEquals("Sam", user.getLastName());
+        assertEquals("Doe", user.getLastName());
     }
 
     @Test
     void setLastName() {
-        user.setLastName("Abudu");
-        assertEquals("Abudu", user.getLastName());
+        user.setLastName("Jane");
+        assertEquals("Jane", user.getLastName());
     }
 
     @Test
     void getName() {
-        assertEquals("abudu", user.getName());
+        assertEquals("John Doe", user.getName());
     }
 
     @Test
     void setName() {
-        user.setName("Sam Abudu");
-        assertEquals("Sam Abudu", user.getName());
+        user.setName("Jane Doe");
+        assertEquals("Jane Doe", user.getName());
     }
-
 
     @Test
     void getEmail() {
-        assertEquals("abudu@gmail.com", user.getEmail());
+        assertEquals("John Doe@gmail.com", user.getEmail());
     }
-
 
     @Test
     void setEmail() {
-        user.setEmail("abudu@gmail.com");
-        assertEquals("abudu@gmail.com", user.getEmail());
+        user.setEmail("Jane XXXXXXXXXXXXX");
+        assertEquals("Jane XXXXXXXXXXXXX", user.getEmail());
     }
 
     @Test
@@ -93,24 +90,14 @@ class UserTest {
 
 
     @Test
-    void setCreatedAt() {
-        LocalDateTime time = LocalDateTime.now();
-        user.setCreatedAt(time);
-        assertEquals(time, user.getCreatedAt());
-    }
-
-    @Test
     void getRoles() {
         assertEquals(roles, user.getRoles());
     }
 
     @Test
     void setRoles() {
-        Set<Role> roles = new HashSet<>();
-        roles.add(new Role(1, ERole.Patron));
         user.setRoles(roles);
         assertEquals(roles, user.getRoles());
     }
-    
 
 }

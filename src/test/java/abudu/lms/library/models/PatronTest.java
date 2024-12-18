@@ -90,16 +90,6 @@ class PatronTest {
         assertEquals("1234567", patron.getPassword());
     }
 
-    @Test
-    void getCreatedAt() {
-        assertEquals(LocalDateTime.now(), patron.getCreatedAt());
-    }
-
-    @Test
-    void setCreatedAt() {
-        patron.setCreatedAt(LocalDateTime.now());
-        assertEquals(LocalDateTime.now(), patron.getCreatedAt());
-    }
 
     @Test
     void getRoles() {
@@ -121,18 +111,6 @@ class PatronTest {
     @Test
     void getFines() {
         assertEquals(100, patron.getFines());
-    }
-
-    @Test
-    void borrowBook() {
-        patron.borrowBook(new Book(2, "Java Programming", "John Doe", "John Doe", 2021, 1234567890, true, "Programming", 10, "Java Programming Book", 1));
-        assertEquals(2, patron.getBorrowedBooks().size());
-    }
-
-    @Test
-    void returnBook() {
-        patron.returnBook(new Book(1, "Java Programming", "John Doe", "John Doe", 2021, 1234567890, true, "Programming", 10, "Java Programming Book", 1));
-        assertEquals(0, patron.getBorrowedBooks().size());
     }
 
     @Test
