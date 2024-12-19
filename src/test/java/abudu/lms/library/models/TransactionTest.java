@@ -4,77 +4,120 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class TransactionTest {
-    private Set<Role> roles;
-    private Patron patron;
     private Transaction transaction;
+    private Patron patron;
+    private Book book;
+    private LocalDateTime borrowDate;
+    private LocalDateTime returnDate;
+    private Set<Role> roles;
+    private Set<Book> borrowedBooks;
 
     @BeforeEach
     void setUp() {
-        Patron patron = new Patron(1, "Abudu", "Sam", "abudu", "abudu@gmail.com", "123456", LocalDateTime.now(), roles, null, 0);
-        Book book = new Book(1, "Some Book", "John Doe", "John Doe", 2021, 1234567890, true, "Programming", 10, "Java Programming Book", 1);
-        LocalDateTime borrowDate = LocalDateTime.now();
-        LocalDateTime returnDate = LocalDateTime.now().plusDays(7);
+        roles = new HashSet<>();
+        roles.add(new Role(1, ERole.Patron));
+        borrowedBooks = new HashSet<>();
+        borrowedBooks.add(new Book(1, "Some Book", "John Doe", "John Doe", 2021, 1234567890, true, "Programming", 10, "Java Programming Book", 1));
+        patron = new Patron(1, "Abudu", "Sam", "abudu", "abudu@gmail.com", "123456", LocalDateTime.now(), roles, borrowedBooks, 0);
+        book = new Book(1, "Some Book", "John Doe", "John Doe", 2021, 1234567890, true, "Programming", 10, "Java Programming Book", 1);
+        borrowDate = LocalDateTime.now();
+        returnDate = LocalDateTime.now().plusDays(14); // Assuming a 14-day borrowing period
         transaction = new Transaction(1, patron, book, borrowDate, returnDate);
     }
 
     @Test
-    void getId() {
+    void testGetId() {
         assertEquals(1, transaction.getId());
     }
 
     @Test
-    void setId() {
+    void testSetId() {
         transaction.setId(2);
         assertEquals(2, transaction.getId());
     }
 
     @Test
-    void getPatron() {
-        assertEquals("Abudu", transaction.getPatron().getName());
+    void testGetPatron() {
+        assertEquals(patron, transaction.getPatron());
     }
 
     @Test
-    void setPatron() {
-        Patron newPatron = new Patron(1, "Sam", "Abudu", "sam", "sam@gmail.com", "123456", LocalDateTime.now(), roles, null, 0);
+    void testSetPatron() {
+        Patron newPatron = new Patron(2, "Jane", "Doe", "jane", "jane@gmail.com", "654321", LocalDateTime.now(), roles, borrowedBooks, 0);
         transaction.setPatron(newPatron);
-        assertEquals("Sam", transaction.getPatron().getName());
+        assertEquals(newPatron, transaction.getPatron());
     }
 
     @Test
-    void getBook() {
-        assertEquals("Some Book", transaction.getBook().getTitle());
+    void testGetBook() {
+        assertEquals(book, transaction.getBook());
     }
 
     @Test
-    void setBook() {
-        Book newBook = new Book(1, "New Book", "John Doe", "John Doe", 2021, 1234567890, true, "Programming", 10, "Java Programming Book", 1);
+    void testSetBook() {
+        Book newBook = new Book(2, "Another Book", "Jane Doe", "Jane Doe", 2022, 98765432, true, "Programming", 15, "Another Programming Book", 2);
         transaction.setBook(newBook);
-        assertEquals("New Book", transaction.getBook().getTitle());
+        assertEquals(newBook, transaction.getBook());
     }
 
     @Test
-    void getBorrowDate() {
-        LocalDateTime borrowDate = LocalDateTime.now();
-        transaction.setBorrowDate(borrowDate);
+    void testGetBorrowDate() {
         assertEquals(borrowDate, transaction.getBorrowDate());
     }
 
     @Test
-    void setBorrowDate() {
-        LocalDateTime newBorrowDate = LocalDateTime.now().plusDays(1);
+    void testSetBorrowDate() {
+        LocalDateTime newBorrowDate = LocalDateTime.now().minusDays(7);
         transaction.setBorrowDate(newBorrowDate);
         assertEquals(newBorrowDate, transaction.getBorrowDate());
     }
 
     @Test
-    void getReturnDate() {
-        LocalDateTime returnDate = LocalDateTime.now().plusDays(7);
-        transaction.setReturnDate(returnDate);
+    void testGetReturnDate() {
         assertEquals(returnDate, transaction.getReturnDate());
+    }
+
+    @Test
+    void testSetReturnDate() {
+        LocalDateTime newReturnDate = LocalDateTime.now().plusDays(7);
+        transaction.setReturnDate(newReturnDate);
+        assertEquals(newReturnDate, transaction.getReturnDate());
+    }
+
+    @Test
+    void testNullPatron() {
+        transaction.setPatron(null);
+        assertNull(transaction.getPatron());
+    }
+
+    @Test
+    void testNullBook() {
+        transaction.setBook(null);
+        assertNull(transaction.getBook());
+    }
+
+    @Test
+    void testNullBorrowDate() {
+        transaction.setBorrowDate(null);
+        assertNull(transaction.getBorrowDate());
+    }
+
+    @Test
+    void testNullReturnDate() {
+        transaction.setReturnDate(null);
+        assertNull(transaction.getReturnDate());
+    }
+
+    @Test
+    void testNegativeId() {
+        transaction.setId(-1);
+        assertEquals(-1, transaction.getId());
     }
 }

@@ -1,6 +1,8 @@
 package abudu.lms.library.repository;
 
+import abudu.lms.library.database.DatabaseHandler;
 import abudu.lms.library.models.Book;
+import abudu.lms.library.models.BookLinkedList;
 
 import java.util.List;
 
@@ -28,4 +30,8 @@ public interface BookRepository {
     int countBooks();
 
     void reserveBook(int id);
+
+    void setDatabaseHandler(DatabaseHandler dbHandler);
+
+    void setBookList(BookLinkedList bookList);
 }

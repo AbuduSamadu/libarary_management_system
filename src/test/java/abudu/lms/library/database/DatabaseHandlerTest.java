@@ -22,6 +22,7 @@ class DatabaseHandlerTest {
     void setUp() throws SQLException {
         // Deregister any existing static mock
         Mockito.framework().clearInlineMocks();
+        
 
         // Mocking the database components
         mockStatement = mock(PreparedStatement.class);
@@ -36,6 +37,7 @@ class DatabaseHandlerTest {
         when(mockConnection.prepareStatement(any(String.class))).thenReturn(mockStatement);
 
         databaseHandler = DatabaseHandler.getInstance();
+
     }
 
     @Test

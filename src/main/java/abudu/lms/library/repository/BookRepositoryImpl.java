@@ -221,4 +221,14 @@ public class BookRepositoryImpl implements BookRepository {
             Logger.getLogger(BookRepositoryImpl.class.getName()).log(Level.SEVERE, "An error occurred while reserving a book", e);
         }
     }
+
+    @Override
+    public void setDatabaseHandler(DatabaseHandler dbHandler) {
+
+    }
+
+    @Override
+    public void setBookList(BookLinkedList bookList) {
+
+    }
 }

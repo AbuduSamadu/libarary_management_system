@@ -26,6 +26,7 @@ public class UserSession {
     }
 
     public static void setInstance(UserSession mockSession) {
+        instance = mockSession;
         
     }
 

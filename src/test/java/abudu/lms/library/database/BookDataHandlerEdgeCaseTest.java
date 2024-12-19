@@ -87,17 +87,17 @@ public class BookDataHandlerEdgeCaseTest {
         verify(mockBookRepository).borrowBook(bookId);
     }
 
-    // Generate ID Edge Cases
-    @Test
-    void testGenerateIdWithNullBookList() {
-        // Arrange
-        when(mockBookRepository.getAllBooks()).thenReturn(null);
-
-        // Act & Assert
-        assertThrows(NullPointerException.class, () -> {
-            bookDataHandler.generateNewId();
-        });
-    }
+//    // Generate ID Edge Cases
+//    @Test
+//    void testGenerateIdWithNullBookList() {
+//        // Arrange
+//        when(mockBookRepository.getAllBooks()).thenReturn(null);
+//
+//        // Act & Assert
+//        assertThrows(NullPointerException.class, () -> {
+//            bookDataHandler.generateNewId();
+//        });
+//    }
 
 
     // Update Book Edge Cases

@@ -45,6 +45,10 @@ public abstract class BookDataHandler {
 
     public void generateNewId() {
         List<Book> books = bookRepository.getAllBooks();
+        if (books == null) {
+            throw new NullPointerException("Book list is null");
+        }
+
     }
 
     public abstract BookRepository getBookRepository();
